@@ -6,13 +6,62 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/04/30 14:16:19 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/01 20:11:16 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
+# include <stdlib.h>
+
+typedef enum e_token_type
+{
+	IS_WORD,
+	IS_PIPE,
+	IS_REDIRECT_IN,
+	IS_REDIRECT_OUT,
+	IS_REDIRECT_APPEND,
+	IS_REDIRECT_HEREDOC,
+	IS_DOLLAR,
+	IS_QUOTE,
+	IS_DQUOTE,
+	IS_SEPARATOR,
+}	t_token_type;
+
+typedef enum e_redirect_type
+{
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	REDIRECT_APPEND,
+	REDIRECT_HEREDOC,
+}	t_redirect_type;
+
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*value;
+}	t_token;
+
+typedef struct s_redirect
+{
+	t_redirect_type		type;
+	char				*file;
+	int					fd;
+	struct s_redirect	*next;
+}	t_redirect;
+
+typedef struct s_command
+{
+	char				*command;
+	char				**args;
+	char				**envp;
+	t_redirect			*redirects;
+	struct s_command	*next;
+}	t_command;
+
+t_token	*tokenize(char *line);
+t_command	*parse(char *line);
 
 
 #endif // MINISHELL_PARSER_H
