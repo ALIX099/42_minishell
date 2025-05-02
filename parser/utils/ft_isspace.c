@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/02 16:38:27 by ikarouat         ###   ########.fr       */
+/*   Created: 2025/05/02 14:59:59 by ikarouat          #+#    #+#             */
+/*   Updated: 2025/05/02 15:00:10 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_command	*parse(char *line)
+int	ft_isspace(char c)
 {
-	t_token 	*tokens;
-	t_command	*cmds;
-
-	tokens = tokenize(line);
-	if (!tokens)
-		return (NULL);
-	//Checkpoint: Tokens created
-	//To do: Turn  tokens into cmds and redirections
-	return (cmds);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r');
 }

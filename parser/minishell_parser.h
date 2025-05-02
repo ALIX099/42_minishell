@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/01 20:11:16 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:26:52 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef enum e_token_type
 	IS_DOLLAR,
 	IS_QUOTE,
 	IS_DQUOTE,
-	IS_SEPARATOR,
 }	t_token_type;
 
 typedef enum e_redirect_type
