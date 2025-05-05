@@ -1,26 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/05 17:53:22 by ikarouat         ###   ########.fr       */
+/*   Created: 2025/05/05 17:04:46 by ikarouat          #+#    #+#             */
+/*   Updated: 2025/05/05 17:05:14 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_command	*parse(char *line)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	t_token 	*tokens;
-	t_command	*cmds;
-
-	cmds = NULL;
-	tokens = tokenize(line);
-	if (!tokens)
-		return (NULL);
-	//To do: Turn tokens into cmds and redirections
-	return (cmds);
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }

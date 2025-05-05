@@ -6,13 +6,13 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 15:08:50 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/02 15:15:00 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:52:20 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-static void	free_chunks(char **strs, unsigned int exist)
+void	free_chunks(char **strs, unsigned int exist)
 {
 	unsigned int	i;
 
@@ -25,7 +25,7 @@ static void	free_chunks(char **strs, unsigned int exist)
 	free(strs);
 }
 
-static unsigned int	word_count(const char *s, char *sep)
+static unsigned int	word_count(const char *s, const char *sep)
 {
 	unsigned int	count_w;
 
@@ -37,14 +37,14 @@ static unsigned int	word_count(const char *s, char *sep)
 		else
 		{
 			count_w++;
-			while (ft_strchr(sep, *s) != NULL && *s != '\0')
+			while (ft_strchr(sep, *s) == NULL && *s != '\0')
 				s++;
 		}
 	}
 	return (count_w);
 }
 
-static unsigned int	next_delimiter(const char *s, char *sep)
+static unsigned int	next_delimiter(const char *s, const char *sep)
 {
 	unsigned int	count;
 
@@ -55,7 +55,7 @@ static unsigned int	next_delimiter(const char *s, char *sep)
 }
 
 static char	*get_next_word(char **strs, const char **s
-	, char *sep, unsigned int exist)
+	, const char *sep, unsigned int exist)
 {
 	char			*chunk;
 	unsigned int	del;
@@ -64,7 +64,7 @@ static char	*get_next_word(char **strs, const char **s
 	i = 0;
 	while (ft_strchr(sep, **s))
 		(*s)++;
-	del = next_delimiter(*s, sep);
+	del = next_delimiter(*s, (char *)sep);
 	chunk = (char *)malloc(del + 1);
 	if (!chunk)
 	{

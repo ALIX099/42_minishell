@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/02 15:49:41 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:41:08 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static unsigned int	count_tokens(char *line)
 	i = 0;
 	while (line && line[i])
 	{
-		while (!ft_isspace(line[i]))
+		while (line[i] && !ft_isspace(line[i]))
 			i++;
 		word_count++;
-		while (ft_isspace(line[i]))
+		while (line[i] && ft_isspace(line[i]))
 			i++;
 	}
 	return (word_count);
@@ -81,6 +81,6 @@ t_token	*tokenize(char *line)
 	if (!tokens)
 		return (NULL);
 	init_tokens(tokens, strs, tokens_count);
-	free_chunks(strs, tokens_count);
+	//free_chunks(strs, tokens_count);
 	return (tokens);
 }

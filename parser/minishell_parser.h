@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/02 15:26:52 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:05:29 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define MINISHELL_PARSER_H
 
 # include <stdlib.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../libft/libft.h"
 
 typedef enum e_token_type
 {
@@ -62,5 +66,9 @@ typedef struct s_command
 t_token	*tokenize(char *line);
 t_command	*parse(char *line);
 
+//Utils
+int		ft_isspace(char c);
+int		ft_strcmp(const char *s1, const char *s2);
+char	**ft_split_on_separator(char const *str, char *sep);
 
 #endif // MINISHELL_PARSER_H
