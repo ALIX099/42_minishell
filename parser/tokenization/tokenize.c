@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/05 17:41:08 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:55:23 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,52 @@ static unsigned int	count_tokens(char *line)
 
 static t_token_type	get_token_type(char *s)
 {
-	if (ft_strcmp(s, ">>") == 0)
+	if (ft_strncmp(s, ">>", 2) == 0)
         return (IS_REDIRECT_APPEND);
-    else if (ft_strcmp(s, "<<") == 0)
+    else if (ft_strncmp(s, "<<", 2) == 0)
         return (IS_REDIRECT_HEREDOC);
-    else if (ft_strcmp(s, "|") == 0)
+    else if (ft_strncmp(s, "|", 1) == 0)
         return (IS_PIPE);
-    else if (ft_strcmp(s, "<") == 0)
+    else if (ft_strncmp(s, "<", 1) == 0)
         return (IS_REDIRECT_IN);
-    else if (ft_strcmp(s, ">") == 0)
+    else if (ft_strncmp(s, ">", 1) == 0)
         return (IS_REDIRECT_OUT);
-    else if (ft_strcmp(s, "$") == 0)
-        return (IS_DOLLAR);
-    else if (ft_strcmp(s, "'") == 0)
-        return (IS_QUOTE);
-    else if (ft_strcmp(s, "\"") == 0)
-        return (IS_DQUOTE);
-    else
-        return (IS_WORD);	
+	else
+        return (IS_WORD);
+}
+static char	*expand_envvars(char *s)
+{
+	//To do
+}
+
+static void	str_to_tokens(t_token *tokens, char *s)
+{
+	unsigned int	i;
+	t_token			*new_token;
+
+	new_token = malloc(sizeof(t_token));
+	new_token->next = NULL;
+	i = 0;
+	if (s[i] == '\'')
+	{
+		tokens->type = IS_WORD;
+		tokens->value = s;
+	}
+	else if (s[i] == '\"')
+	{
+		tokens->type = IS_WORD;
+		tokens->value = expand_envvars(s);
+	}
+	else
+	{
+		while (s[i])
+		{
+			if (s[i] == '>' || s[i] == '<' || s[i] == '|')
+			{
+				
+			}
+		}
+	}
 }
 
 static void	init_tokens(t_token *tokens, char **strs, unsigned int tokens_count)
@@ -58,12 +86,7 @@ static void	init_tokens(t_token *tokens, char **strs, unsigned int tokens_count)
 
     i = 0;
     while (i < tokens_count)
-    {
-        tokens[i].type = get_token_type(strs[i]);
-        tokens[i].value = strs[i];
-        i++;
-    }
-    tokens[tokens_count].value = NULL;
+        str_to_tokens(tokens, strs[i++]);
 }
 
 t_token	*tokenize(char *line)
@@ -75,12 +98,8 @@ t_token	*tokenize(char *line)
 	tokens = NULL;
 	tokens_count = count_tokens(line);
 	strs = ft_split_on_separator(line, " \v\f\r\t\n");
-	if (tokens_count == 0)
-		return (NULL);
-	tokens = malloc(sizeof(t_token) * (tokens_count + 1));
-	if (!tokens)
+	if (!strs)
 		return (NULL);
 	init_tokens(tokens, strs, tokens_count);
-	//free_chunks(strs, tokens_count);
 	return (tokens);
 }

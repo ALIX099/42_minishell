@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/05 17:05:29 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:50:38 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ typedef enum e_token_type
 	IS_REDIRECT_OUT,
 	IS_REDIRECT_APPEND,
 	IS_REDIRECT_HEREDOC,
-	IS_DOLLAR,
-	IS_QUOTE,
-	IS_DQUOTE,
 }	t_token_type;
 
 typedef enum e_redirect_type
@@ -44,6 +41,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	struct s_token	*next;
 }	t_token;
 
 typedef struct s_redirect

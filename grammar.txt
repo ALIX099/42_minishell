@@ -1,0 +1,86 @@
+/* ===================================================== */
+/* MINISHELL CONTEXT-FREE GRAMMAR (FULL SPECIFICATION)   */
+/* Covers both mandatory and bonus requirements          */
+/* ===================================================== */
+
+/* -------------------------------- */
+/* 1. PROGRAM STRUCTURE             */
+/* -------------------------------- */
+<program>        ::= (<command_line> <newline>)*
+
+<command_line>   ::= <pipeline> (<redirection>)*
+
+/* -------------------------------- */
+/* 2. COMMANDS AND PIPELINES        */
+/* -------------------------------- */
+<pipeline>      ::= <command> ('|' <command>)*
+
+<command>       ::= <builtin> | <executable>
+
+<builtin>       ::= 'echo' ('-n'? <arg>*)
+                    | 'cd' <path>
+                    | 'pwd'
+                    | 'export' (<var> ('=' <arg>)?)*
+                    | 'unset' <var>*
+                    | 'env'
+                    | 'exit' <arg>?
+
+<executable>    ::= <path> <arg>*
+
+/* -------------------------------- */
+/* 3. ARGUMENTS AND PATHS           */
+/* -------------------------------- */
+<arg>           ::= (<word> | <single_quoted> | <double_quoted> | <variable>)+
+
+<path>          ::= ('./' | '../' | '/')? (<word> | <wildcard>)+
+
+/* -------------------------------- */
+/* 4. REDIRECTIONS                  */
+/* -------------------------------- */
+<redirection>   ::= '<' <path>
+                    | '>' <path>
+                    | '<<' <word>
+                    | '>>' <path>
+
+/* -------------------------------- */
+/* 5. QUOTING AND VARIABLES         */
+/* -------------------------------- */
+<single_quoted> ::= "'" (<word> | <punct> | <space>)* "'"
+                    /* Literal quotes: $VAR not expanded */
+
+<double_quoted> ::= '"' (<word> | <punct> | <space> | <variable>)* '"'
+                    /* Expanded quotes: $VAR works */
+
+<variable>      ::= '$' (<var> | '?')
+                    /* $VAR or $? (exit status) */
+
+<var>           ::= [a-zA-Z_][a-zA-Z0-9_]*
+                    /* Valid variable name rules */
+
+/* -------------------------------- */
+/* 6. TERMINAL SYMBOLS (LEXER)      */
+/* -------------------------------- */
+<word>          ::= [a-zA-Z0-9_./-]+
+                    /* Standard word characters */
+
+<wildcard>      ::= '*'             /* Bonus: Glob expansion */
+
+<punct>         ::= [!@#$%^&*()\-=+{}\[\]|;:',.<>/?]
+                    /* Allowed punctuation */
+
+<space>         ::= ' '             /* Space character */
+
+<newline>       ::= '\n'            /* Command terminator */
+
+/* ===================================================== */
+/* IMPLEMENTATION NOTES:
+   - * means 0 or more (Kleene star)
+   - ? means optional (0 or 1)
+   - + means 1 or more
+   - Order of operations:
+     1. Parentheses () for grouping
+     2. Pipes | left-associative
+     3. Redirections
+     4. Logical operators &&/|| left-associative
+*/
+/* ===================================================== */

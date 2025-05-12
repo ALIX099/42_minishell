@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   valid_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/10 12:45:39 by ikarouat         ###   ########.fr       */
+/*   Created: 2025/05/07 14:48:27 by ikarouat          #+#    #+#             */
+/*   Updated: 2025/05/10 12:47:07 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_command	*parse(char *line)
+int	valid_tokens(t_token *tokens)
 {
-	t_token 	*tokens;
-	t_command	*cmds;
+	int	i;
+	int	is_first_word;
 
-	cmds = NULL;
-	tokens = tokenize(line);
-	if (!tokens)
-		return (NULL);
-	if (!valid_tokens(tokens))
+	i = 0;
+	if (tokens[i].type != IS_WORD && tokens[i].type != IS_REDIRECT_HEREDOC)
 	{
-		free(tokens);
-		return (NULL);
+		printf("Error: %s Invalid command\n", tokens[i].value);
+		return (0);
 	}
-	cmds = parse_tokens(tokens);
-	if (!cmds)
+	while (tokens && tokens[i].value != NULL)
 	{
-		free(tokens);
-		return (NULL);
+			
 	}
-	return (cmds);
+	return (1);
 }
