@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/10 12:45:39 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:00:27 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ t_command	*parse(char *line)
 	tokens = tokenize(line);
 	if (!tokens)
 		return (NULL);
-	if (!valid_tokens(tokens))
-	{
-		free(tokens);
-		return (NULL);
-	}
 	cmds = parse_tokens(tokens);
 	if (!cmds)
 	{
