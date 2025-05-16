@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/14 20:13:36 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/16 22:26:46 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 static t_token_type	get_token_type(char *s)
 {
-	if (ft_strncmp(s, ">>", 2) == 0)
-        return (IS_REDIRECT_APPEND);
-    else if (ft_strncmp(s, "<<", 2) == 0)
-        return (IS_REDIRECT_HEREDOC);
-    else if (ft_strncmp(s, "|", 1) == 0)
-        return (IS_PIPE);
-    else if (ft_strncmp(s, "<", 1) == 0)
-        return (IS_REDIRECT_IN);
-    else if (ft_strncmp(s, ">", 1) == 0)
-        return (IS_REDIRECT_OUT);
+	if (ft_strcmp(s, ">>", 2) == 0)
+		return (IS_REDIRECT_APPEND);
+	else if (ft_strcmp(s, "<<", 2) == 0)
+		return (IS_REDIRECT_HEREDOC);
+	else if (ft_strcmp(s, "|", 1) == 0)
+		return (IS_PIPE);
+	else if (ft_strcmp(s, "<", 1) == 0)
+		return (IS_REDIRECT_IN);
+	else if (ft_strcmp(s, ">", 1) == 0)
+		return (IS_REDIRECT_OUT);
 	else
-        return (IS_WORD);
+		return (IS_WORD);
 }
 
 static char	*expand_envvars(char *s)
@@ -40,7 +40,7 @@ static void	separate_tokens(char *s, t_token *new_token)
 	t_token			*next_token;
 
 	i = 0;
-	op_len = 1;
+	op_len = 1; 
 	while (s[i] && s[i] != '>' && s[i] != '<' && s[i] != '|')
 		i++;
 	if (i > 0)
@@ -63,9 +63,22 @@ static void	separate_tokens(char *s, t_token *new_token)
 	if (s[i])
 	{
 		if ((s[i] == '>' && s[i + 1] == '>') || (s[i] == '<' && s[i + 1] == '<'))
-		op_len = 2;
-		
+			op_len = 2;
+		new_token->value = ft_strndup(s + i, op_len);
+		new_token->type = get_token_type(new_token->value);
+		new_token->next = NULL;
 	}
+	if (s[i + op_len])
+	{
+		next_token = malloc(sizeof(t_token));
+		if (!next_token)
+			return ;
+		next_token->next = NULL;
+		new_token->next = next_token;
+		separate_tokens(s + i, next_token);
+	}
+	else
+		new_token->next = NULL;
 }
 
 static void	str_to_tokens(t_token *tokens, char *s)
@@ -110,12 +123,12 @@ static void	str_to_tokens(t_token *tokens, char *s)
 
 void	init_tokens(t_token *tokens, char *str)
 {
-    unsigned int	i;
+	unsigned int	i;
 
-    i = 0;
-    while (ft_isspace(str[i]))
+	i = 0;
+	while (ft_isspace(str[i]))
 		i++;
 	if (!str[i])
 		return;
-    str_to_tokens(tokens, str + i);
+	str_to_tokens(tokens, str + i);
 }
