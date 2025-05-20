@@ -13,6 +13,5 @@ int main(void)
 		line = readline("shell> ");
 		cmds = parse(line);
 		(void)cmds;
-		//Execution ghydirha 3lii
 	}
 }

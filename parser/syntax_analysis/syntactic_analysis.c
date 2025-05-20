@@ -1,35 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/20 15:49:15 by ikarouat         ###   ########.fr       */
+/*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
+/*   Updated: 2025/05/20 15:36:46 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_command	*parse(char *line)
-{
-	t_token 	*tokens;
-	t_command	*cmds;
-
-	cmds = NULL;
-	//generate lexemes
-	tokens = tokenize(line);
-	if (!tokens)
-		return (NULL);
-	while (tokens != NULL)
-		(printf("<S, type>: %s , %i", tokens->value, tokens->type), tokens = tokens->next);
-	//validate conformance to grammar
-	//cmds = syntactic_analysis(tokens);
-	if (!cmds)
-	{
-		free(tokens);
-		return (NULL);
-	}
-	return (cmds);
-}

@@ -1,6 +1,6 @@
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -g3 -Iparser/
-SRCS=$(wildcard *.c parser/*.c parser/utils/*.c)
+SRCS=$(wildcard *.c parser/*.c parser/*/*.c)
 ARCHIVE=libft/libft.a
 TARGET=minishell
 
