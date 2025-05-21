@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/21 02:00:32 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/21 23:15:33 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,10 @@ static void	str_to_tokens(t_token *tokens, char *s)
 		start = i;
 		while (s[i] && !is_special_char("<>'\"|$", s[i]))
 			i++;
-		if (is_special_char("<>'\"|$", s[i]))
+		if (is_special_char("()<>|$&", s[i]))
 		{
-			//extract the special substr out of s
-			//init a new token in case of valid extraction + append to tok list
-			//save where the index stopped after extraction
+			new_token->value = extract_token(s + i, &i);
+			new_token->type = get_token_type(new_token->value);
 		}
 		else
 		{

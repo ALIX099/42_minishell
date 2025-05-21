@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/20 16:05:22 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/21 23:58:54 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 
+/*
+	TOKENIZATION
+*/
 typedef enum e_token_type
 {
 	IS_WORD,
@@ -27,15 +30,18 @@ typedef enum e_token_type
 	IS_REDIRECT_OUT,
 	IS_REDIRECT_APPEND,
 	IS_REDIRECT_HEREDOC,
+	IS_OPEN_BRACKET,
+	IS_CLOSE_BRACKET,
+	IS_AND,
+	IS_OR,
 }	t_token_type;
 
-typedef enum e_redirect_type
-{
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	REDIRECT_APPEND,
-	REDIRECT_HEREDOC,
-}	t_redirect_type;
+/*
+	SYNTAX ANALYSIS
+*/
+
+
+
 
 typedef struct s_token
 {
@@ -43,6 +49,20 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }	t_token;
+void	init_tokens(t_token *tokens, char *s);
+char	*extract_token(char *s, int *i_ptr);
+t_token	*tokenize(char *line);
+
+/*
+	REDIRECTIONS
+*/
+typedef enum e_redirect_type
+{
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	REDIRECT_APPEND,
+	REDIRECT_HEREDOC,
+}	t_redirect_type;
 
 typedef struct s_redirect
 {
@@ -52,6 +72,10 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }	t_redirect;
 
+
+/*
+	SEMANTIC ANALYSIS
+*/
 typedef struct s_command
 {
 	char				*command;
@@ -60,8 +84,7 @@ typedef struct s_command
 	t_redirect			*redirects;
 	struct s_command	*next;
 }	t_command;
-void	init_tokens(t_token *tokens, char *s);
-t_token	*tokenize(char *line);
+
 t_command	*parse(char *line);
 
 //Utils
