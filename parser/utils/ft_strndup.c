@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:46:00 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/16 22:50:49 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:06:06 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 char	*ft_strndup(char *s, int n)
 {
-	size_t	i;
+	int		i;
 	char	*new_s;
-	size_t	s_len;
+	int		s_len;
 
-	if (!s1 || n <= 0)
+	if (!s || n <= 0)
 		return (NULL);
 	i = 0;
-	s_len = ft_strlen(s1);
+	s_len = ft_strlen(s);
 	if (n > s_len)
 		n = s_len;
 	new_s = (char *)malloc(n + 1);
@@ -29,7 +29,7 @@ char	*ft_strndup(char *s, int n)
 		return (NULL);
 	while (i < n)
 	{
-		new_s[i] = s1[i];
+		new_s[i] = s[i];
 		i++;
 	}
 	new_s[i] = '\0';

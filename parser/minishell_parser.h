@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/20 15:40:39 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:05:22 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ typedef struct s_command
 	t_redirect			*redirects;
 	struct s_command	*next;
 }	t_command;
-
+void	init_tokens(t_token *tokens, char *s);
 t_token	*tokenize(char *line);
 t_command	*parse(char *line);
 
 //Utils
 int		ft_isspace(char c);
 int		ft_strcmp(const char *s1, const char *s2);
-char	**ft_split_on_separator(char const *str, char *sep);
+char	*ft_strndup(char *s, int n);
 
 #endif // MINISHELL_PARSER_H
