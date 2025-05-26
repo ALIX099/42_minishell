@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/22 18:06:01 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:23:49 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,16 @@ static t_token_type	get_token_type(char *s)
 		return (IS_REDIRECT_IN);
 	else if (ft_strcmp(s, ">") == 0)
 		return (IS_REDIRECT_OUT);
+	else if (ft_strcmp(s, "||") == 0)
+		return (IS_OR);
+	else if (ft_strcmp(s, "&&") == 0)
+		return (IS_AND);
+	else if (ft_strcmp(s, "(") == 0)
+		return (IS_OPEN_BRACKET);
+	else if (ft_strcmp(s, ")"))
+		return (IS_CLOSE_BRACKET);
 	else
-	return (IS_WORD);
+		return (IS_WORD);
 }
 
 //static char	*expand_envvars(char *s)
