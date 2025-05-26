@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/21 23:15:33 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:06:01 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ static t_token_type	get_token_type(char *s)
 	else if (ft_strcmp(s, "<") == 0)
 		return (IS_REDIRECT_IN);
 	else if (ft_strcmp(s, ">") == 0)
-	return (IS_REDIRECT_OUT);
+		return (IS_REDIRECT_OUT);
 	else
 	return (IS_WORD);
 }
 
-static char	*expand_envvars(char *s)
-{
-	//To do
-	(void)s;
-	return (NULL);
-}
+//static char	*expand_envvars(char *s)
+//{
+//	//To do
+//	(void)s;
+//	return (NULL);
+//}
 
 static int	is_special_char(const char *s, int c)
 {
@@ -42,24 +42,31 @@ static int	is_special_char(const char *s, int c)
 	return (0);
 }
 
-static void	str_to_tokens(t_token *tokens, char *s)
+static void	str_to_tokens(t_token **tokens, char *s)
 {
 	t_token	*new_token;
 	int		i;
 	int		start;
 
 	new_token = malloc(sizeof(t_token)); 
-	ft_tokenlist_add_back(&tokens, new_token);
+	ft_tokenlist_add_back(tokens, &new_token);
 	i = 0;
-	while (s[i])
+	while (s[i] && ft_strlen(s) != 0)
 	{
 		while (ft_isspace(s[i]))
 			i++;
 		start = i;
-		while (s[i] && !is_special_char("<>'\"|$", s[i]))
+		while (s[i] && !is_special_char("()<>|$&", s[i]) && !ft_isspace(s[i]))
 			i++;
-		if (is_special_char("()<>|$&", s[i]))
+		if (s[i] && is_special_char("()<>|$&", s[i]))
 		{
+			//TO ADD:check if the previous char is not a space and add the word from start if that's the case
+			if (i != 0 && !ft_isspace(s[i - 1]))
+			{
+				new_token->value = ft_strndup(s + start, i - start + 1);
+				new_token->type = get_token_type(new_token->value);
+				str_to_tokens(tokens, s + i);
+			}
 			new_token->value = extract_token(s + i, &i);
 			new_token->type = get_token_type(new_token->value);
 		}
@@ -72,7 +79,7 @@ static void	str_to_tokens(t_token *tokens, char *s)
 	}
 }
 
-void	init_tokens(t_token *tokens, char *str)
+void	init_tokens(t_token **tokens, char *str)
 {
 	unsigned int	i;
 

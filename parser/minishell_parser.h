@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/21 23:58:54 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:06:36 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,21 @@ typedef enum e_token_type
 	IS_OR,
 }	t_token_type;
 
-/*
-	SYNTAX ANALYSIS
-*/
-
-
-
-
 typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
 	struct s_token	*next;
 }	t_token;
-void	init_tokens(t_token *tokens, char *s);
+void	init_tokens(t_token **tokens, char *s);
+void	ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
 char	*extract_token(char *s, int *i_ptr);
 t_token	*tokenize(char *line);
+
+/*
+	SYNTAX ANALYSIS
+*/
+
 
 /*
 	REDIRECTIONS
