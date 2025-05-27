@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/20 15:49:15 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:12:50 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_command	*parse(char *line)
 	if (!tokens)
 		return (NULL);
 	while (tokens != NULL)
-		(printf("<S, type>: %s , %i", tokens->value, tokens->type), tokens = tokens->next);
+		(printf("<%s , %i>\n", tokens->value, tokens->type), tokens = tokens->next);
 	//validate conformance to grammar
 	//cmds = syntactic_analysis(tokens);
 	if (!cmds)

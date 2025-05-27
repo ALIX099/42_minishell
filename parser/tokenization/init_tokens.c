@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/26 22:23:49 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:24:24 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_token_type	get_token_type(char *s)
 		return (IS_AND);
 	else if (ft_strcmp(s, "(") == 0)
 		return (IS_OPEN_BRACKET);
-	else if (ft_strcmp(s, ")"))
+	else if (ft_strcmp(s, ")") == 0)
 		return (IS_CLOSE_BRACKET);
 	else
 		return (IS_WORD);
@@ -71,19 +71,21 @@ static void	str_to_tokens(t_token **tokens, char *s)
 			//TO ADD:check if the previous char is not a space and add the word from start if that's the case
 			if (i != 0 && !ft_isspace(s[i - 1]))
 			{
-				new_token->value = ft_strndup(s + start, i - start + 1);
+				new_token->value = ft_strndup(s + start, i - start);
 				new_token->type = get_token_type(new_token->value);
 				str_to_tokens(tokens, s + i);
+				return ;
 			}
 			new_token->value = extract_token(s + i, &i);
 			new_token->type = get_token_type(new_token->value);
 		}
 		else
 		{
-			new_token->value = ft_strndup(s + start, i - start + 1);
+			new_token->value = ft_strndup(s + start, i - start);
 			new_token->type = get_token_type(new_token->value);
 		}
 		str_to_tokens(tokens, s + i);
+		return ;
 	}
 }
 
