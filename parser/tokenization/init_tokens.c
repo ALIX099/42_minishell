@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/27 17:24:24 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:15:42 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ static void	str_to_tokens(t_token **tokens, char *s)
 			i++;
 		if (s[i] && is_special_char("()<>|$&", s[i]))
 		{
-			//TO ADD:check if the previous char is not a space and add the word from start if that's the case
 			if (i != 0 && !ft_isspace(s[i - 1]))
 			{
 				new_token->value = ft_strndup(s + start, i - start);
