@@ -3,33 +3,89 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/27 17:12:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:40:20 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_command	*parse(char *line)
+static void print_redirects(t_redirect *redir, int depth)
+{
+    while (redir)
+    {
+        for (int i = 0; i < depth; i++)
+            printf("  ");
+        switch (redir->type)
+        {
+            case REDIRECT_IN:
+                printf("REDIR_IN: %s\n", redir->file);
+                break;
+            case REDIRECT_OUT:
+                printf("REDIR_OUT: %s\n", redir->file);
+                break;
+            case REDIRECT_APPEND:
+                printf("REDIR_APPEND: %s\n", redir->file);
+                break;
+            case REDIRECT_HEREDOC:
+                printf("REDIR_HEREDOC: %s\n", redir->file);
+                break;
+        }
+        redir = redir->next;
+    }
+}
+
+void	print_ast(t_ast *ast, int depth)
+{
+    if (!ast)
+        return;
+    for (int i = 0; i < depth; i++)
+        printf("  ");
+    switch (ast->type)
+    {
+        case NODE_CMD:
+            printf("CMD: ");
+            for (int i = 0; ast->argv && ast->argv[i]; i++)
+                printf("%s ", ast->argv[i]);
+            printf("\n");
+            print_redirects(ast->redirects, depth + 1); // <-- Add this line
+            break;
+        case NODE_PIPE:
+            printf("PIPE\n");
+            break;
+        case NODE_AND:
+            printf("AND\n");
+            break;
+        case NODE_OR:
+            printf("OR\n");
+            break;
+        case NODE_SUBSHELL:
+            printf("SUBSHELL\n");
+            break;
+    }
+    print_ast(ast->left, depth + 1);
+    print_ast(ast->right, depth + 1);
+}
+
+t_ast	*parse(char *line)
 {
 	t_token 	*tokens;
-	t_command	*cmds;
+	t_ast	*ast;
 
-	cmds = NULL;
+	ast = NULL;
 	//generate lexemes
 	tokens = tokenize(line);
 	if (!tokens)
 		return (NULL);
-	while (tokens != NULL)
-		(printf("<%s , %i>\n", tokens->value, tokens->type), tokens = tokens->next);
-	//validate conformance to grammar
-	//cmds = syntactic_analysis(tokens);
-	if (!cmds)
+    //Build the abstract syntax tree and check conformance to grammar
+	ast = syntactic_analysis(tokens);
+	if (!ast)
 	{
 		free(tokens);
 		return (NULL);
 	}
-	return (cmds);
+	print_ast(ast, 0);
+	return (ast);
 }

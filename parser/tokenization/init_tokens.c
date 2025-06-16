@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/30 17:15:42 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:47:56 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,27 @@ static int	is_special_char(const char *s, int c)
 		return (1);
 	return (0);
 }
-
+/*
+	TO DO:
+		Correctly handle unclosed words in quotes and subshells
+	HOW:
+		Add a sub prompt for unclosed quotations and subshells
+		for each encountred symbol (,',":
+			1-add to stack
+			2-walk the str into the corresponding closing symbol:
+				2-1-Symbol exists:
+					pop from stack && attach new token
+				2-2-Symbol doesn't exist:
+					add corresponding subshell prompt
+					get input until symbol received
+					append the served buffer into existing token
+					pop from stack
+			stack empty at end:
+				balanced symbols
+			else:
+				error
+					
+*/
 static void	str_to_tokens(t_token **tokens, char *s)
 {
 	t_token	*new_token;
@@ -64,9 +84,9 @@ static void	str_to_tokens(t_token **tokens, char *s)
 		while (ft_isspace(s[i]))
 			i++;
 		start = i;
-		while (s[i] && !is_special_char("()<>|$&", s[i]) && !ft_isspace(s[i]))
+		while (s[i] && !is_special_char("()<>|&", s[i]) && !ft_isspace(s[i]))
 			i++;
-		if (s[i] && is_special_char("()<>|$&", s[i]))
+		if (s[i] && is_special_char("()<>|&", s[i]))
 		{
 			if (i != 0 && !ft_isspace(s[i - 1]))
 			{

@@ -5,8 +5,8 @@
 
 int main(void)
 {
-	char		*line;
-	t_command	*cmds;
+	char	*line;
+	t_ast	*cmds;
 
 	while (1)
 	{

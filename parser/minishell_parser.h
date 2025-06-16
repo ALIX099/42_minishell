@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/22 18:06:36 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:22:51 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,6 @@ char	*extract_token(char *s, int *i_ptr);
 t_token	*tokenize(char *line);
 
 /*
-	SYNTAX ANALYSIS
-*/
-
-
-/*
 	REDIRECTIONS
 */
 typedef enum e_redirect_type
@@ -71,10 +66,32 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }	t_redirect;
 
-
 /*
-	SEMANTIC ANALYSIS
+	SYNTAX ANALYSIS
 */
+typedef enum e_ast_type
+{
+	NODE_CMD,
+	NODE_PIPE,
+	NODE_AND,
+	NODE_OR,
+	NODE_SUBSHELL
+}	t_ast_type;
+
+typedef struct s_ast
+{
+	t_ast_type	type;
+	struct s_ast	*left;
+	struct s_ast	*right;
+	char			**argv;
+	t_redirect		*redirects;	
+}	t_ast;
+
+t_ast	*syntactic_analysis(t_token *tokens);
+t_ast	*parse(char *line);
+
+/* REPLACED WITH AST
+
 typedef struct s_command
 {
 	char				*command;
@@ -83,8 +100,7 @@ typedef struct s_command
 	t_redirect			*redirects;
 	struct s_command	*next;
 }	t_command;
-
-t_command	*parse(char *line);
+*/
 
 //Utils
 int		ft_isspace(char c);
