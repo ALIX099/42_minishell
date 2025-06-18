@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/06/16 16:53:37 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:32:15 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,13 @@ static t_redirect_type  get_redirect_type(t_token_type tok_type)
         return REDIRECT_APPEND;
     if (tok_type == IS_REDIRECT_HEREDOC)
         return REDIRECT_HEREDOC;
+    return (-1);
 }
 
 static t_ast *parse_pipeline(t_token **tokens)
 {
     t_ast *left = parse_command(tokens);
-    while ((*tokens)->value && (*tokens)->type == IS_PIPE)
+    while (*tokens && (*tokens)->type == IS_PIPE)
     {
         *tokens = (*tokens)->next;
         t_ast *right = parse_command(tokens);
@@ -52,7 +53,7 @@ static t_ast *parse_pipeline(t_token **tokens)
 static t_ast *parse_command(t_token **tokens)
 {
     // Subshell: ( ... )
-    if ((*tokens)->value && (*tokens)->type == IS_OPEN_BRACKET)
+    if (*tokens && (*tokens)->type == IS_OPEN_BRACKET)
     {
         *tokens = (*tokens)->next;
         t_ast *subshell = parse_and_or(tokens);
@@ -74,7 +75,7 @@ static t_ast *parse_command(t_token **tokens)
     node->argv = malloc(sizeof(char*) * 256); // Arbitrary max args
     int argc = 0;
     node->redirects = NULL;
-    while ((*tokens)->value && ((*tokens)->type == IS_WORD ||
+    while (*tokens && ((*tokens)->type == IS_WORD ||
                        (*tokens)->type == IS_REDIRECT_IN ||
                        (*tokens)->type == IS_REDIRECT_OUT ||
                        (*tokens)->type == IS_REDIRECT_APPEND ||
@@ -107,7 +108,7 @@ static t_ast *parse_command(t_token **tokens)
 static t_ast *parse_and_or(t_token **tokens)
 {
     t_ast *left = parse_pipeline(tokens);
-    while ((*tokens)->value && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
+    while (*tokens && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
     {
         t_ast_type type = ((*tokens)->type == IS_AND) ? NODE_AND : NODE_OR;
         *tokens = (*tokens)->next;

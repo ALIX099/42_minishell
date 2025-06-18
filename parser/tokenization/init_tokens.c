@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/06/16 15:47:56 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:53:32 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,19 @@ static t_token_type	get_token_type(char *s)
 		return (IS_WORD);
 }
 
+static int	is_special_char(const char *s, int c)
+{
+	if (ft_strchr(s, c))
+		return (1);
+	return (0);
+}
+
+static void	set_token(t_token *new_token, char *s, int start, int i)
+{
+	new_token->value = ft_strndup(s + start, i - start);
+	new_token->type = get_token_type(new_token->value);
+}
+
 //static char	*expand_envvars(char *s)
 //{
 //	//To do
@@ -43,34 +56,7 @@ static t_token_type	get_token_type(char *s)
 //	return (NULL);
 //}
 
-static int	is_special_char(const char *s, int c)
-{
-	if (ft_strchr(s, c))
-		return (1);
-	return (0);
-}
-/*
-	TO DO:
-		Correctly handle unclosed words in quotes and subshells
-	HOW:
-		Add a sub prompt for unclosed quotations and subshells
-		for each encountred symbol (,',":
-			1-add to stack
-			2-walk the str into the corresponding closing symbol:
-				2-1-Symbol exists:
-					pop from stack && attach new token
-				2-2-Symbol doesn't exist:
-					add corresponding subshell prompt
-					get input until symbol received
-					append the served buffer into existing token
-					pop from stack
-			stack empty at end:
-				balanced symbols
-			else:
-				error
-					
-*/
-static void	str_to_tokens(t_token **tokens, char *s)
+/*static void	str_to_tokens(t_token **tokens, char *s)
 {
 	t_token	*new_token;
 	int		i;
@@ -90,22 +76,103 @@ static void	str_to_tokens(t_token **tokens, char *s)
 		{
 			if (i != 0 && !ft_isspace(s[i - 1]))
 			{
-				new_token->value = ft_strndup(s + start, i - start);
-				new_token->type = get_token_type(new_token->value);
-				str_to_tokens(tokens, s + i);
+				(set_token(new_token, s, start, i), str_to_tokens(tokens, s + i));
 				return ;
 			}
 			new_token->value = extract_token(s + i, &i);
 			new_token->type = get_token_type(new_token->value);
 		}
 		else
-		{
-			new_token->value = ft_strndup(s + start, i - start);
-			new_token->type = get_token_type(new_token->value);
-		}
+			set_token(new_token, s, start, i);
 		str_to_tokens(tokens, s + i);
 		return ;
 	}
+}*/
+
+static char	*append_line(char *dst, char *src)
+{
+	char	*new_buff;
+	int		i;
+	int		len;
+	char	*tmp;
+
+	if (!dst)
+		return (ft_strdup(src));
+	if (!src)
+		return (ft_strdup(dst));
+	len = ft_strlen(dst) + ft_strlen(src);
+	new_buff = malloc(len + 1);
+	if (!new_buff)
+		return (NULL);
+	i = 0;
+	tmp = (char *) dst;
+	while (*(tmp) != '\0')
+		new_buff[i++] = *(tmp++);
+	tmp = (char *) src;
+	while (*(tmp) != '\0')
+		new_buff[i++] = *(tmp++);
+	new_buff[i] = '\0';
+	return (new_buff);
+}
+
+static int	read_until_quote(char **s, int i, char quote, char **out)
+{
+    int start = i + 1;
+    int found = 0;
+
+    while ((*s)[++i]) {
+        if ((*s)[i] == quote) {
+            found = 1;
+            break;
+        }
+    }
+    while (!found) {
+        char *more = readline("QUOTE> ");
+        if (!more)
+            return -1;
+        *s = append_line(*s, more);
+        while ((*s)[i]) {
+            if ((*s)[i] == quote) {
+                found = 1;
+                break;
+            }
+            i++;
+        }
+    }
+    *out = ft_strndup(*s + start, i - start);
+    return i + 1;
+}
+
+static void	str_to_tokens(t_token **tokens, char *s)
+{
+    t_token	*new_token;
+    int		i = 0, start;
+
+    if (!s || !*s)
+        return;
+    new_token = malloc(sizeof(t_token));
+    ft_tokenlist_add_back(tokens, &new_token);
+    while (s[i] && ft_isspace(s[i]))
+        i++;
+    start = i;
+    if (s[i] == '\'' || s[i] == '"') {
+        int next = read_until_quote(&s, i, s[i], &new_token->value);
+        if (next < 0)
+			return;
+        new_token->type = IS_WORD;
+        str_to_tokens(tokens, s + next);
+        return;
+    }
+    while (s[i] && !is_special_char("()<>|&", s[i]) && !ft_isspace(s[i]) && s[i] != '\'' && s[i] != '"')
+        i++;
+    if (i > start)
+        set_token(new_token, s, start, i);
+    else if (s[i] && is_special_char("()<>|&", s[i]))
+    {
+        new_token->value = extract_token(s + i, &i);
+        new_token->type = get_token_type(new_token->value);
+    }
+    str_to_tokens(tokens, s + i);
 }
 
 void	init_tokens(t_token **tokens, char *str)
