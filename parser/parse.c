@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 20:12:29 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/06/17 14:34:33 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/06/27 11:49:43 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,11 @@ t_ast	*parse(char *line)
 	tokens = tokenize(line);
 	if (!tokens)
 		return (NULL);
-    t_token *tmp;
-    tmp = tokens;
-    while (tmp)
-    {
-        printf("Tok: %s\n", tmp->value);
-        tmp = tmp->next;
-    }
-    //Build the abstract syntax tree and check conformance to grammar
-	ast = syntactic_analysis(tokens);
-	if (!ast)
+	//Validate conformance to grammar
+	ast = ;
+	//Prepare command for execution
+	cmds = ;
+	if (!cmds)
 	{
 		free(tokens);
 		return (NULL);
