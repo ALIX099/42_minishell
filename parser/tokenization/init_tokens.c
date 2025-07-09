@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/06/17 15:53:32 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/09 21:43:03 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,46 +48,6 @@ static void	set_token(t_token *new_token, char *s, int start, int i)
 	new_token->value = ft_strndup(s + start, i - start);
 	new_token->type = get_token_type(new_token->value);
 }
-
-//static char	*expand_envvars(char *s)
-//{
-//	//To do
-//	(void)s;
-//	return (NULL);
-//}
-
-/*static void	str_to_tokens(t_token **tokens, char *s)
-{
-	t_token	*new_token;
-	int		i;
-	int		start;
-
-	new_token = malloc(sizeof(t_token)); 
-	ft_tokenlist_add_back(tokens, &new_token);
-	i = 0;
-	while (s[i] && ft_strlen(s) != 0)
-	{
-		while (ft_isspace(s[i]))
-			i++;
-		start = i;
-		while (s[i] && !is_special_char("()<>|&", s[i]) && !ft_isspace(s[i]))
-			i++;
-		if (s[i] && is_special_char("()<>|&", s[i]))
-		{
-			if (i != 0 && !ft_isspace(s[i - 1]))
-			{
-				(set_token(new_token, s, start, i), str_to_tokens(tokens, s + i));
-				return ;
-			}
-			new_token->value = extract_token(s + i, &i);
-			new_token->type = get_token_type(new_token->value);
-		}
-		else
-			set_token(new_token, s, start, i);
-		str_to_tokens(tokens, s + i);
-		return ;
-	}
-}*/
 
 static char	*append_line(char *dst, char *src)
 {

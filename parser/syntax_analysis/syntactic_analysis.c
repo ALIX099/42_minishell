@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/06/17 14:32:15 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/08 23:39:00 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ static t_ast *parse_pipeline(t_token **tokens)
             return NULL;
         t_ast *parent = malloc(sizeof(t_ast));
         parent->type = NODE_PIPE;
-        parent->left = left;
         parent->right = right;
         parent->argv = NULL;
+        parent->left = left;
         parent->redirects = NULL;
         left = parent;
     }
@@ -52,7 +52,6 @@ static t_ast *parse_pipeline(t_token **tokens)
 
 static t_ast *parse_command(t_token **tokens)
 {
-    // Subshell: ( ... )
     if (*tokens && (*tokens)->type == IS_OPEN_BRACKET)
     {
         *tokens = (*tokens)->next;
@@ -69,10 +68,9 @@ static t_ast *parse_command(t_token **tokens)
         return node;
     }
 
-    // Simple command and redirections
     t_ast *node = malloc(sizeof(t_ast));
     node->type = NODE_CMD;
-    node->argv = malloc(sizeof(char*) * 256); // Arbitrary max args
+    node->argv = malloc(sizeof(char*) * 256);
     int argc = 0;
     node->redirects = NULL;
     while (*tokens && ((*tokens)->type == IS_WORD ||
@@ -83,10 +81,10 @@ static t_ast *parse_command(t_token **tokens)
     {
         if ((*tokens)->type == IS_WORD)
         {
-            node->argv[argc++] = strdup((*tokens)->value);
+            node->argv[argc++] = ft_strdup((*tokens)->value);
             *tokens = (*tokens)->next;
         }
-        else // Redirection
+        else
         {
             t_redirect *redir = malloc(sizeof(t_redirect));
             redir->type = get_redirect_type((*tokens)->type);
@@ -131,7 +129,6 @@ static t_ast *parse_and_or(t_token **tokens)
         Add syntax error detection and grammar conformance checks
         within the parsing functions
 */
-
 t_ast	*syntactic_analysis(t_token *tokens)
 {
     return parse_and_or(&tokens);
