@@ -6,16 +6,11 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/08 23:39:00 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:15:50 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
-
-//Build the ast and check the grammar conformance in the process
-static t_ast *parse_and_or(t_token **tokens);
-static t_ast *parse_pipeline(t_token **tokens);
-static t_ast *parse_command(t_token **tokens);
 
 static t_redirect_type  get_redirect_type(t_token_type tok_type)
 {
@@ -30,27 +25,7 @@ static t_redirect_type  get_redirect_type(t_token_type tok_type)
     return (-1);
 }
 
-static t_ast *parse_pipeline(t_token **tokens)
-{
-    t_ast *left = parse_command(tokens);
-    while (*tokens && (*tokens)->type == IS_PIPE)
-    {
-        *tokens = (*tokens)->next;
-        t_ast *right = parse_command(tokens);
-        if (!right)
-            return NULL;
-        t_ast *parent = malloc(sizeof(t_ast));
-        parent->type = NODE_PIPE;
-        parent->right = right;
-        parent->argv = NULL;
-        parent->left = left;
-        parent->redirects = NULL;
-        left = parent;
-    }
-    return left;
-}
-
-static t_ast *parse_command(t_token **tokens)
+t_ast *parse_command(t_token **tokens)
 {
     if (*tokens && (*tokens)->type == IS_OPEN_BRACKET)
     {
@@ -103,7 +78,27 @@ static t_ast *parse_command(t_token **tokens)
     return node;
 }
 
-static t_ast *parse_and_or(t_token **tokens)
+t_ast *parse_pipeline(t_token **tokens)
+{
+    t_ast *left = parse_command(tokens);
+    while (*tokens && (*tokens)->type == IS_PIPE)
+    {
+        *tokens = (*tokens)->next;
+        t_ast *right = parse_command(tokens);
+        if (!right)
+            return NULL;
+        t_ast *parent = malloc(sizeof(t_ast));
+        parent->type = NODE_PIPE;
+        parent->right = right;
+        parent->argv = NULL;
+        parent->left = left;
+        parent->redirects = NULL;
+        left = parent;
+    }
+    return left;
+}
+
+t_ast *parse_and_or(t_token **tokens)
 {
     t_ast *left = parse_pipeline(tokens);
     while (*tokens && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
@@ -124,11 +119,6 @@ static t_ast *parse_and_or(t_token **tokens)
     return left;
 }
 
-/*
-    TODO:
-        Add syntax error detection and grammar conformance checks
-        within the parsing functions
-*/
 t_ast	*syntactic_analysis(t_token *tokens)
 {
     return parse_and_or(&tokens);
