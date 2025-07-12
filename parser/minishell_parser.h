@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/11 17:47:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/12 17:54:22 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_token
 void	init_tokens(t_token **tokens, char *s);
 void	ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
 char	*extract_token(char *s, int *i_ptr);
-t_token	*tokenize(char *line);
+t_token	*tokenize(char **line);
 
 /*
 	REDIRECTIONS

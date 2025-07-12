@@ -3,20 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/05/22 17:56:54 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/12 17:54:07 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_token	*tokenize(char *line)
+t_token	*tokenize(char **line)
 {
-	t_token			*tokens;
+	t_token	*tokens;
+	char	*trimmed_line;
 
 	tokens = NULL;
-	init_tokens(&tokens, line);
+	trimmed_line = ft_strtrim(*line, " \n\t\v\r\f");
+	free(*line);
+	line = &trimmed_line;
+	init_tokens(&tokens, *line);
 	return (tokens);
 }

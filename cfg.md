@@ -36,10 +36,5 @@ command         = (redirection)* word(1,*) (redirection)*
 
 redirection     = ("<" | ">" | ">>" | "<<") word
 
-
-FIRST:
-    word (can be followed by)-> epsilon, word, redir, pipe, open bracket, bin_op
-    open_bracket (can be followed by)-> ), logical expr + ) 
-    redir (can be followed by)-> word
-
-ls ""||ls&&(pwd || echo -n "lakherr")| cat
+NOTE:
+    Expander and executor to be implemented using (Pre-Order)BFS

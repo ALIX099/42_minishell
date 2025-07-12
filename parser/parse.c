@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:51:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/09 00:02:29 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/12 17:50:48 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_ast	*parse(char *line)
 
 	ast = NULL;
 	//generate lexemes
-	tokens = tokenize(line);
+	tokens = tokenize(&line);
 	if (!tokens)
 		return (NULL);
     t_token *tmp;
