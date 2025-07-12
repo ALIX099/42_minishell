@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/10 19:15:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/11 17:46:32 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,24 @@ static t_redirect_type  get_redirect_type(t_token_type tok_type)
 
 t_ast *parse_command(t_token **tokens)
 {
+    if (!*tokens || ((*tokens)->type != IS_WORD &&
+        (*tokens)->type != IS_REDIRECT_IN &&
+        (*tokens)->type != IS_REDIRECT_OUT &&
+        (*tokens)->type != IS_REDIRECT_APPEND &&
+        (*tokens)->type != IS_REDIRECT_HEREDOC &&
+        (*tokens)->type != IS_OPEN_BRACKET))
+    {
+        syntax_error("unexpected token", *tokens);
+        return NULL;
+    }
     if (*tokens && (*tokens)->type == IS_OPEN_BRACKET)
     {
         *tokens = (*tokens)->next;
-        t_ast *subshell = parse_and_or(tokens);
+        t_ast *subshell = parse_logical_expr(tokens);
         if (!*tokens || (*tokens)->type != IS_CLOSE_BRACKET)
-            return NULL;
+        {
+            return (syntax_error("expected closing parenthesis", *tokens), NULL);
+        }
         *tokens = (*tokens)->next;
         t_ast *node = malloc(sizeof(t_ast));
         node->type = NODE_SUBSHELL;
@@ -65,7 +77,9 @@ t_ast *parse_command(t_token **tokens)
             redir->type = get_redirect_type((*tokens)->type);
             *tokens = (*tokens)->next;
             if (!*tokens || (*tokens)->type != IS_WORD)
-                return NULL;
+            {
+                return (syntax_error("expected filename after redirection", *tokens), NULL);
+            }
             redir->file = strdup((*tokens)->value);
             *tokens = (*tokens)->next;
             redir->next = node->redirects;
@@ -86,7 +100,7 @@ t_ast *parse_pipeline(t_token **tokens)
         *tokens = (*tokens)->next;
         t_ast *right = parse_command(tokens);
         if (!right)
-            return NULL;
+            return (syntax_error("expected command after operator", *tokens), NULL);
         t_ast *parent = malloc(sizeof(t_ast));
         parent->type = NODE_PIPE;
         parent->right = right;
@@ -98,7 +112,7 @@ t_ast *parse_pipeline(t_token **tokens)
     return left;
 }
 
-t_ast *parse_and_or(t_token **tokens)
+t_ast *parse_logical_expr(t_token **tokens)
 {
     t_ast *left = parse_pipeline(tokens);
     while (*tokens && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
@@ -107,7 +121,7 @@ t_ast *parse_and_or(t_token **tokens)
         *tokens = (*tokens)->next;
         t_ast *right = parse_pipeline(tokens);
         if (!right)
-            return NULL;
+            return (syntax_error("expected command after logical operator", *tokens), NULL);
         t_ast *parent = malloc(sizeof(t_ast));
         parent->type = type;
         parent->left = left;
@@ -121,5 +135,15 @@ t_ast *parse_and_or(t_token **tokens)
 
 t_ast	*syntactic_analysis(t_token *tokens)
 {
-    return parse_and_or(&tokens);
+    t_ast   *ast;
+
+    ast = parse_logical_expr(&tokens);
+    if (!ast)
+        return (NULL);
+    if (tokens)
+    {
+        syntax_error("unexpected token at end of input", tokens); 
+        return (NULL);
+    }
+    return (ast);
 }

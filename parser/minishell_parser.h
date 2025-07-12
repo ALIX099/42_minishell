@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/10 19:15:54 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/11 17:47:50 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef enum e_ast_type
 	NODE_PIPE,
 	NODE_AND,
 	NODE_OR,
-	NODE_SUBSHELL,
-	NODE_REDIR
+	NODE_SUBSHELL//,
+	//NODE_REDIR To Be checked for improvment
 }	t_ast_type;
 
 typedef struct s_ast
@@ -90,11 +90,12 @@ typedef struct s_ast
 
 t_ast	*syntactic_analysis(t_token *tokens);
 t_ast	*parse(char *line);
-//RecursiveDecsentParser
-t_ast *parse_and_or(t_token **tokens);
+//Recursive Decsent Parser
+t_ast *parse_logical_expr(t_token **tokens);
 t_ast *parse_pipeline(t_token **tokens);
 t_ast *parse_command(t_token **tokens);
-
+//Syntax Error Reporting
+void	syntax_error(const char *msg, t_token *token);
 /* REPLACED WITH AST
 
 typedef struct s_command

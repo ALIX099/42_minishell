@@ -10,7 +10,7 @@ int main()//int argc, char **argv, char **envp)
 
 	while (1)
 	{
-		line = readline("shell> ");
+		line = readline("rsh> ");
 		cmds = parse(line);
 		(void)cmds;
 	}
