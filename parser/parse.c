@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:51:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/12 17:50:48 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/13 23:50:44 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ t_ast	*parse(char *line)
 	tokens = tokenize(&line);
 	if (!tokens)
 		return (NULL);
-    t_token *tmp;
-    tmp = tokens;
-    while (tmp)
-    {
-        printf("Tok: %s\n", tmp->value);
-        tmp = tmp->next;
-    }
+    //t_token *tmp;
+    //tmp = tokens;
+    //while (tmp)
+    //{
+    //    printf("Tok: %s\n", tmp->value);
+    //    tmp = tmp->next;
+    //}
     //Build the abstract syntax tree and check conformance to grammar
 	ast = syntactic_analysis(tokens);
 	if (!ast)

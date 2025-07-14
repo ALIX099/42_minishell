@@ -11,7 +11,7 @@ int main()//int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("rsh> ");
-		cmds = parse(line);
-		(void)cmds;
+		cmds = parse(line);//Output: Abstract Syntax Tree
+		execute(cmds);
 	}
 }

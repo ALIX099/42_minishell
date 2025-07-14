@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/12 18:00:05 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:14:07 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_ast *parse_command(t_token **tokens)
 
     t_ast *node = malloc(sizeof(t_ast));
     node->type = NODE_CMD;
-    node->argv = malloc(sizeof(char*) * 256);
+    node->argv = malloc(sizeof(char*) * 256);//256 to be replaced with a dynamic args counter
     int argc = 0;
     node->redirects = NULL;
     while (*tokens && ((*tokens)->type == IS_WORD ||
@@ -137,7 +137,7 @@ t_ast	*syntactic_analysis(t_token *tokens)
 {
     t_ast   *ast;
 
-    ast = parse_logical_expr(&tokens);
+    ast = parse_logical_expr(&tokens);//A recursive descent parser
     if (!ast)
         return (NULL);
     if (tokens)
