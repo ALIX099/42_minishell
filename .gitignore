@@ -1,5 +1,6 @@
 .gdb_history
+.vscode
 libft/*
 z_progress.md
 grammar.txt
-.gdb_history
+allowed_funcs.txt

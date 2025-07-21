@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/14 00:00:00 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/21 15:30:21 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	execute(t_ast *ast)
 {
-	if (!expand(&ast))
-		printf("Expansion error");
+	expand(ast);
+	print_ast("root", ast, 0);
 	//Execution logic to be added
+	return (0);//Exit Status
 }

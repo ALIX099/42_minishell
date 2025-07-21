@@ -3,34 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/14 04:11:38 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/21 15:54:40 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	expand_node()
+void	expand_node(char **arg)
+{
+	char	*dollar;
+	char	*env_var;
+	char	*env_val;
+	char	*new_arg;
+	size_t	i;
+	size_t	var_len;
+	size_t	prefix_len;
 
-int	expand(t_ast **ast)
+	if (!*arg)
+		return ;
+	dollar = strchr(*arg, '$');
+	if (!dollar || (!ft_isalnum(*(dollar + 1)) || *(dollar + 1) == '_'))
+		return ;
+	var_len = 0;
+	prefix_len = dollar - *arg;
+	while ((ft_isalnum((dollar + 1)[var_len]) || (dollar + 1)[var_len] == '_'))
+		var_len++;
+	env_var = malloc(var_len + 1);
+	ft_strlcpy(env_var, (dollar + 1), var_len + 1);
+	env_val = getenv(env_var);
+	if (!env_val)
+		env_val = "";
+	free(env_var);
+	new_arg = malloc(prefix_len + ft_strlen(env_val) + ft_strlen((dollar + var_len)));
+	i = -1;
+	while (++i < prefix_len)
+		new_arg[i] = (*arg)[i];
+	new_arg[i] = 0;
+	new_arg = ft_strjoin(new_arg, env_val);
+	new_arg = ft_strjoin(new_arg, dollar + var_len + 1);
+	free(*arg);
+	*arg = NULL;
+	*arg = new_arg;
+}
+
+void	expand_redir_list(t_redirect **redirections)
+{
+	t_redirect	*tmp;
+
+	tmp = *redirections;
+	while (tmp)
+	{
+		expand_node(&(tmp->file));
+		tmp = tmp->next;
+	}
+	return ;
+}
+
+void	expand(t_ast *ast)
 {
 	int	i;
 
-	if (!*ast)
-		return (0);//no command provided
-	if ((*ast)->type == NODE_CMD)
+	if (!ast)
+		return ;
+	if (ast->type == NODE_CMD)
 	{
 		i = 0;
-		while ((*ast)->argv[i])
-			expand_node((*ast)->argv[i++]);
+		while (ast->argv[i])
+			expand_node(&ast->argv[i++]);
+		if (ast->redirects)
+			expand_redir_list(&ast->redirects);
 	}
 	else
 	{
-		//Recursivly expand cmd nodes until all nodes have been visited
-		expand(&(*ast)->left);
-		expand(&(*ast)->right);
+		expand(ast->left);
+		expand(ast->right);
+		return ;
 	}
-	return (1);
 }
