@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/15 21:27:56 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 01:19:28 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,21 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+
+/*
+	EXPANSION
+*/
+typedef enum e_expand_state
+{
+	EXPAND,
+	NO_EXPAND
+}	t_expand_state;
+
+typedef struct e_expand_arg
+{
+	char			*value;
+	t_expand_state	expandable;
+}	t_expand_arg;
 
 /*
 	TOKENIZATION
@@ -40,15 +55,15 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
+	t_expand_state	expandable;
 	struct s_token	*next;
 }	t_token;
 void	init_tokens(t_token **tokens, char *s);
 void	ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
 char	*extract_token(char *s, int *i_ptr);
 t_token	*tokenize(char **line);
-
 /*
-	REDIRECTIONS
+REDIRECTIONS
 */
 typedef enum e_redirect_type
 {
@@ -61,7 +76,7 @@ typedef enum e_redirect_type
 typedef struct s_redirect
 {
 	t_redirect_type		type;
-	char				*file;
+	t_expand_arg		*file;
 	int					fd;
 	struct s_redirect	*next;
 }	t_redirect;
@@ -75,8 +90,7 @@ typedef enum e_ast_type
 	NODE_PIPE,
 	NODE_AND,
 	NODE_OR,
-	NODE_SUBSHELL//,
-	//NODE_REDIR To Be checked for improvment
+	NODE_SUBSHELL
 }	t_ast_type;
 
 typedef struct s_ast
@@ -84,7 +98,7 @@ typedef struct s_ast
 	t_ast_type	type;
 	struct s_ast	*left;
 	struct s_ast	*right;
-	char			**argv;
+	t_expand_arg	**argv;
 	t_redirect		*redirects;	
 }	t_ast;
 
@@ -96,6 +110,7 @@ t_ast *parse_pipeline(t_token **tokens);
 t_ast *parse_command(t_token **tokens);
 //Syntax Error Reporting
 void	syntax_error(const char *msg, t_token *token);
+
 /* REPLACED WITH AST
 
 typedef struct s_command

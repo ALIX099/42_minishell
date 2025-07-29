@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/09 21:43:03 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 00:38:35 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,13 @@ static void	str_to_tokens(t_token **tokens, char *s)
         return;
     new_token = malloc(sizeof(t_token));
     ft_tokenlist_add_back(tokens, &new_token);
+	new_token->expandable = EXPAND;
     while (s[i] && ft_isspace(s[i]))
         i++;
     start = i;
     if (s[i] == '\'' || s[i] == '"') {
+		if (s[i] == '\'')
+			new_token->expandable = NO_EXPAND;
         int next = read_until_quote(&s, i, s[i], &new_token->value);
         if (next < 0)
 			return;

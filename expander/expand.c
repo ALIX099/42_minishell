@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/21 15:54:40 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 01:22:13 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	expand_redir_list(t_redirect **redirections)
 	tmp = *redirections;
 	while (tmp)
 	{
-		expand_node(&(tmp->file));
+		if (tmp->file->expandable == EXPAND)
+			expand_node(&(tmp->file->value));
 		tmp = tmp->next;
 	}
 	return ;
@@ -72,7 +73,11 @@ void	expand(t_ast *ast)
 	{
 		i = 0;
 		while (ast->argv[i])
-			expand_node(&ast->argv[i++]);
+		{
+			if (ast->argv[i]->expandable == EXPAND)
+				expand_node(&ast->argv[i]->value);
+			i++;
+		}
 		if (ast->redirects)
 			expand_redir_list(&ast->redirects);
 	}

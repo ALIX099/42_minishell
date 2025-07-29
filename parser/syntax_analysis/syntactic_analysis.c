@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/14 00:14:07 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 01:36:06 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_ast *parse_command(t_token **tokens)
 
     t_ast *node = malloc(sizeof(t_ast));
     node->type = NODE_CMD;
-    node->argv = malloc(sizeof(char*) * 256);//256 to be replaced with a dynamic args counter
+    node->argv = malloc(sizeof(t_expand_arg *) * 256);//256 to be replaced with a dynamic args counter
     int argc = 0;
     node->redirects = NULL;
     while (*tokens && ((*tokens)->type == IS_WORD ||
@@ -68,7 +68,9 @@ t_ast *parse_command(t_token **tokens)
     {
         if ((*tokens)->type == IS_WORD)
         {
-            node->argv[argc++] = ft_strdup((*tokens)->value);
+            node->argv[argc] = malloc(sizeof(t_expand_arg)); 
+            node->argv[argc]->value = ft_strdup((*tokens)->value);
+            node->argv[argc++]->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
         }
         else
@@ -80,7 +82,9 @@ t_ast *parse_command(t_token **tokens)
             {
                 return (syntax_error("expected filename after redirection", *tokens), NULL);
             }
-            redir->file = strdup((*tokens)->value);
+            redir->file = malloc(sizeof(t_expand_arg));
+            redir->file->value = strdup((*tokens)->value);
+            redir->file->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
             redir->next = node->redirects;
             node->redirects = redir;
