@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/29 01:22:13 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 04:47:59 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	expand_redir_list(t_redirect **redirections)
 	tmp = *redirections;
 	while (tmp)
 	{
-		if (tmp->file->expandable == EXPAND)
+		if (tmp->file->expandable == EXPAND && tmp->type != REDIRECT_HEREDOC)
 			expand_node(&(tmp->file->value));
 		tmp = tmp->next;
 	}

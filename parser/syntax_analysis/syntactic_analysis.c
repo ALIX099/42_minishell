@@ -6,7 +6,7 @@
 /*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/29 01:36:06 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/07/29 04:26:31 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_ast *parse_command(t_token **tokens)
                 return (syntax_error("expected filename after redirection", *tokens), NULL);
             }
             redir->file = malloc(sizeof(t_expand_arg));
-            redir->file->value = strdup((*tokens)->value);
+            redir->file->value = ft_strdup((*tokens)->value);
             redir->file->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
             redir->next = node->redirects;
