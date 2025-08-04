@@ -3,15 +3,16 @@
 
 #include "minishell.h"
 
-int main()//int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_ast	*cmds;
 
 	while (1)
 	{
-		line = readline("rsh> ");
+		line = readline(RED"rsh> ");
 		cmds = parse(line);//Output: Abstract Syntax Tree
-		execute(cmds);
+		expand(cmds);
+		execute(cmds, argv, envp);
 	}
 }
