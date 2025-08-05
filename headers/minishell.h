@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/04 06:08:26 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/05 20:27:05 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,19 @@ typedef struct s_env
     struct s_env    *next;
 }   t_env;
 
+typedef struct s_exec
+{
+    t_env   *my_env;
+    char    *pwd;
+    int     empty_env;
+    int     exit_value;
+}   t_exec;
 
-void	expand(t_ast *ast);
-int		execute(t_ast *ast, char **av, char **envp);
+void        expand(t_ast *ast);
+int         execute(t_ast *ast);
+t_exec       init_env(char **envp);
+t_env	    *env_new(const char *key, const char *value);
+void        add_back(t_env **env, t_env *to_add);
 //To delete
 void	print_ast(const char *direction, t_ast *ast, int depth);
 
