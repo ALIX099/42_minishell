@@ -1,9 +1,9 @@
 // Description: This is a mock main.c file to test parsing.
-//To Be replaced with the actual main.c file
+// To Be replaced with the actual main.c file
 
 #include "minishell.h"
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
 	char	*line;
 	t_ast	*cmds;
@@ -11,16 +11,16 @@ int main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	cmds = NULL;
 	exec = init_env(envp);
-	cmds->env = &exec;
 	while (1)
 	{
-		line = readline(RED"rsh> ");
+		line = readline(RED "rsh> " RESET);
 		if (!line)
-            break;
-		cmds = parse(line); //Output: Abstract Syntax Tree
+			break ;
+		cmds = parse(line); // Output: Abstract Syntax Tree
+		cmds->exec = &exec;
 		expand(cmds);
 		execute(cmds);
+		free(line);
 	}
 }

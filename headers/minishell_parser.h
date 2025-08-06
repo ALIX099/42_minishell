@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/05 18:36:53 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/06 12:00:09 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ typedef struct s_ast
 	struct s_ast		*right;
 	t_expand_arg		**argv;
 	t_redirect			*redirects;
-	struct s_exec		*env;
+	struct s_exec		*exec;
 }						t_ast;
 
 t_ast					*syntactic_analysis(t_token *tokens);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/06 02:32:02 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/06 11:59:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_env
 typedef struct s_exec
 {
 	t_env			*my_env; //freed all linked list
+	char			**env;// need to be freed after
 	char			*pwd;
 	bool			empty_env;
 	int				exit_value;
@@ -46,6 +47,9 @@ int					execute(t_ast *ast);
 t_exec				init_env(char **envp);
 t_env				*env_new(const char *key, const char *value);
 void				add_back(t_env **env, t_env *to_add);
+char				*ft_strjoin_free(char *s1, const char *s2);
+char				**append_to_array(t_env *env);
+int					ft_env(t_ast *ast);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 
