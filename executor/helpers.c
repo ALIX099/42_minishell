@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helpers.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 19:40:15 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/05 20:00:51 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/06 01:05:03 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 t_env	*env_new(const char *key, const char *value)
 {
-	t_env *node;
+	t_env	*node;
 
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
-
 	if (key)
 		node->key = ft_strdup(key);
 	if (value)
@@ -28,10 +27,19 @@ t_env	*env_new(const char *key, const char *value)
 	return (node);
 }
 
-void    add_back(t_env **env, t_env *to_add)
+t_env   *lst_last(t_env *env)
+{
+    if (!env)
+        return (NULL);
+    while (env->next)
+    env = env->next;
+    return (env);
+}
+
+void	add_back(t_env **env, t_env *to_add)
 {
     t_env *last;
-    
+
     if (!env || !to_add)
         return ;
     if (*env == NULL)
@@ -39,6 +47,6 @@ void    add_back(t_env **env, t_env *to_add)
     else
     {
         last = lst_last(*env);
-        last ->next = to_add;
+        last->next = to_add;
     }
 }

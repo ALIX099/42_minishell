@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/05 17:58:57 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/06 01:05:34 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	execute_command(t_ast *ast)
 {
-	int exit_code;
+	int	exit_code;
 
 	if (!ast || !ast->argv || !ast->argv[0])
 		return (0);
 	if (!ft_strcmp(ast->argv[0]->value, "env"))
-		exit_code = get_env(ast);
+		exit_code = ft_env(ast);
 	else if (!ft_strcmp(ast->argv[0]->value, "echo"))
 		exit_code = ft_echo(ast);
 	else if (!ft_strcmp(ast->argv[0]->value, "cd"))
@@ -37,28 +37,27 @@ int	execute_command(t_ast *ast)
 	return (exit_code);
 }
 
-
 // int	execute_pipeline(t_ast *ast)
 // {
-	
+
 // }
 
 // int	execute_subshell(t_ast *ast)
 // {
-	
+
 // }
 
 // int	execute_and(t_ast *ast)
 // {
-	
+
 // }
 
 // int	execute_or(t_ast *ast)
 // {
-	
+
 // }
 
-int execute(t_ast *ast)
+int	execute(t_ast *ast)
 {
 	// print_ast("root", ast, 0);
 	if (ast->type == NODE_CMD)
@@ -71,5 +70,5 @@ int execute(t_ast *ast)
 	// 	return (execute_and(ast));
 	// if (ast->type == NODE_OR)
 	// 	return (execute_or(ast));
-	return (0);//Exit Status
+	return (0); // Exit Status
 }

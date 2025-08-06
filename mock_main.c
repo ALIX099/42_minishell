@@ -11,6 +11,7 @@ int main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	cmds = NULL;
 	exec = init_env(envp);
 	cmds->env = &exec;
 	while (1)

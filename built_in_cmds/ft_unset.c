@@ -14,9 +14,11 @@
 
 void	env_unset(t_env **head, const char *key)
 {
-	t_env *tmp = *head;
-	t_env *prev = NULL;
+	t_env	*tmp;
+	t_env	*prev;
 
+	tmp = *head;
+	prev = NULL;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, key) == 0)
