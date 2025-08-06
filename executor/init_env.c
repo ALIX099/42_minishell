@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 10:00:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/06 01:51:07 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/06 09:48:06 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void change_values(t_exec *exec)
+{
+    t_env *tmp;
+
+    tmp = exec->my_env;
+    while (tmp)
+    {
+        if (!ft_strcmp(tmp->key, "SHLVL"))
+        {
+            int nb = ft_atoi(tmp->value);
+            free(tmp->value);
+            tmp->value = ft_itoa(nb + 1);
+            break;
+        }
+        tmp = tmp ->next;
+    }
+}
 
 void    hard_coding_env(t_exec *exec)
 {
@@ -26,12 +44,11 @@ void    hard_coding_env(t_exec *exec)
     add_back(&exec->my_env, env_new("PATH",
         "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"));
     add_back(&exec->my_env, env_new("_", "/usr/bin/env"));
-    exec->empty_env = 1;
+    exec->empty_env = true;
 }
 
 t_exec	init_env(char **envp)
 {
-    char    *tmp;
     char    *sep;
 	t_exec	exec;
 	int		i;
@@ -47,9 +64,22 @@ t_exec	init_env(char **envp)
     while (envp[i])
     {
         sep = ft_strchr(envp[i], '=');
-        sep = '\0';
-        add_back(exec.my_env, env_new(envp[i], sep + 1));
-        sep = '=';
+        if (sep)
+        {
+            *sep = '\0';
+            add_back(&exec.my_env, env_new(envp[i], sep + 1));
+            *sep = '=';
+        }
+        i++;
     }
-    change_values();
+    change_values(&exec);
+    return (exec);
+}
+
+char **append_to_array(t_exec *exec)
+{
+    int i;
+
+    i = 0;
+    
 }

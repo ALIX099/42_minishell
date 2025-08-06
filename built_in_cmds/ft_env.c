@@ -6,8 +6,9 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:22:47 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/05 18:22:49 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/06 02:55:25 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
