@@ -18,7 +18,8 @@ int	main(int ac, char **av, char **envp)
 		if (!line)
 			break ;
 		cmds = parse(line); // Output: Abstract Syntax Tree
-		cmds->exec = &exec;
+		if (cmds)
+			cmds->exec = &exec;
 		expand(cmds);
 		execute(cmds);
 	}

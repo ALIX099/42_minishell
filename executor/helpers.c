@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 19:40:15 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/06 11:29:44 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 10:30:24 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,18 @@ char	*ft_strjoin_free(char *s1, const char *s2)
 	joined = ft_strjoin(s1, s2);
 	free(s1);
 	return (joined);
+}
+
+int get_env(t_ast *ast, const char *key)
+{
+	t_env *tmp;
+
+	tmp = ast->exec->my_env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }

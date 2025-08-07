@@ -3,47 +3,76 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:30 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 06:26:29 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/07 15:47:30 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static int	count_args(t_expand_arg **args)
-{
-	int	count = 0;
+void		set_env(t_ast *ast, const char *key, const char *value);
 
+int	count_args(t_expand_arg **args)
+{
+	int	count;
+
+	count = 0;
 	while (args && args[count])
 		count++;
 	return (count);
 }
 
-int	ft_cd(t_expand_arg **args)
+int	ft_cd(t_ast *ast, t_expand_arg **args)
 {
-	char	*path;
-	char	*home;
+	char	buff[4096];
+	char	*home_path;
 
-	if (count_args(args) > 2)
-	{
-		write(2, "rsh: cd: too many arguments\n", 28);
-		return (EXIT_FAILURE);
-	}
+	home_path = NULL;
+	if (args[2]->value)//need to check
+		return (write(2, "rsh: cd: too many arguments\n", 28), 1);
 	if (!args[1] || !args[1]->value || args[1]->value[0] == '\0')
 	{
-		home = getenv("HOME");
-		if (!home)
-		{
-			write(2, "rsh: cd: HOME not set\n", 23);
-			return (EXIT_FAILURE);
-		}
-		path = home;
+		home_path = getenv("HOME");
+		if (!home_path)
+			return (write(2, "rsh: cd: HOME not set\n", 23), 1);
 	}
+	else if (args[1]->value[0] == '-')
+		return (write(2, "rsh: cd: options are invalid\n", 29), 1);
 	else
-		path = args[1]->value;
-	if (chdir(path) == -1)
+		home_path = args[1]->value;
+	set_env(ast, "OLDPWD", getcwd(buff, sizeof(buff)));
+	if (chdir(home_path) == -1)
 		return (perror("rsh: cd"), EXIT_FAILURE);
+	set_env(ast, "PWD", getcwd(buff, sizeof(buff)));
 	return (EXIT_SUCCESS);
+}
+
+void	update_env_value(t_env *env_list, const char *key, const char *value)
+{
+	t_env	*tmp;
+
+	tmp = env_list;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, key))
+		{
+			if (tmp->value)
+				free(tmp->value);
+			tmp->value = ft_strdup(value);
+			return ;
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	set_env(t_ast *ast, const char *key, const char *value)
+{
+	if (!key || !value)
+		return ;
+	if (get_env(ast, key))
+		update_env_value(ast->exec->my_env, key, value);
+	else
+		add_back(&ast->exec->my_env, env_new(key, value));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/07 05:52:31 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/07 17:08:06 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	execute_command(t_ast *ast)
 	else if (!ft_strcmp(ast->argv[0]->value, "echo"))
 		return(ft_echo(ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "cd"))
-		return (ft_cd(ast->argv));
+		return (ft_cd(ast , ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "pwd"))
 		return (ft_pwd(ast->argv));
 	// else if (!ft_strcmp(ast->argv[0]->value, "export"))
@@ -58,6 +58,8 @@ int	execute_command(t_ast *ast)
 int	execute(t_ast *ast)
 {
 	// print_ast("root", ast, 0);
+	if (!ast)
+		return (0);
 	if (ast->type == NODE_CMD)
 		return (execute_command(ast));
 	// if (ast->type == NODE_PIPE)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:57 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 05:29:43 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/07 15:19:17 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static void	get_unset(t_env **head, const char *key)
 
 	if (!head || !*head || !key)
 		return ;
-
 	tmp = *head;
 	prev = NULL;
 	while (tmp)
@@ -47,6 +46,8 @@ int	ft_unset(t_env **head, t_expand_arg **args)
 	if (!head || !args)
 		return (1);
 	i = 1;
+	if (args[1]->value[0] == '-')
+		return (write(2, "rsh: cd: options are invalid\n", 29), 1);
 	while (args[i])
 	{
 		get_unset(head, args[i]->value);

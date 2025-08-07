@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/07 06:21:19 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/07 15:30:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,13 @@ void				add_back(t_env **env, t_env *to_add);
 char				*ft_strjoin_free(char *s1, const char *s2);
 char				**append_to_array(t_env *env);
 int	                lst_size(t_env *env);
+int					count_args(t_expand_arg **args);
+int 				get_env(t_ast *ast, const char *key);
 int					ft_env(t_ast *ast);
 int	                ft_unset(t_env **head, t_expand_arg **args);
 int                 ft_echo(t_expand_arg **args);
 int                 ft_pwd(t_expand_arg **args);
-int	                ft_cd(t_expand_arg **args);
+int					ft_cd(t_ast *ast, t_expand_arg **args);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 
