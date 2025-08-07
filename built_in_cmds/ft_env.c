@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:22:47 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/07 15:46:34 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 21:17:50 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	ft_env(t_ast *ast)
 
 	if (!ast || !ast->exec || !ast->exec->my_env)
 		return (0);
-	if (ast->argv[1]->value)//need to check it after
-		return (write(1, "Error : too many args\n", 22), 127);
+	if (count_args(ast->argv) > 1)
+		return (write(2, "rsh: env: too many arguments\n", 29), 127);
 	tmp = ast->exec->my_env;
 	while (tmp)
 	{

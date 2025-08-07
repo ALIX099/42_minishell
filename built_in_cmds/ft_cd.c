@@ -6,13 +6,13 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:30 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 15:47:30 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 21:16:33 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void		set_env(t_ast *ast, const char *key, const char *value);
+void	set_env(t_ast *ast, const char *key, const char *value);
 
 int	count_args(t_expand_arg **args)
 {
@@ -30,7 +30,9 @@ int	ft_cd(t_ast *ast, t_expand_arg **args)
 	char	*home_path;
 
 	home_path = NULL;
-	if (args[2]->value)//need to check
+	if (!ast || !args)
+		return (write(2, "rsh: cd: invalid arguments\n", 27), 1);
+	if (count_args(args) > 2)
 		return (write(2, "rsh: cd: too many arguments\n", 28), 1);
 	if (!args[1] || !args[1]->value || args[1]->value[0] == '\0')
 	{
@@ -44,9 +46,9 @@ int	ft_cd(t_ast *ast, t_expand_arg **args)
 		home_path = args[1]->value;
 	set_env(ast, "OLDPWD", getcwd(buff, sizeof(buff)));
 	if (chdir(home_path) == -1)
-		return (perror("rsh: cd"), EXIT_FAILURE);
+		return (perror("rsh: cd"), 1);
 	set_env(ast, "PWD", getcwd(buff, sizeof(buff)));
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 void	update_env_value(t_env *env_list, const char *key, const char *value)

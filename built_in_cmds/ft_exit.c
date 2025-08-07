@@ -6,23 +6,54 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 16:57:40 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:14:11 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-// int check_exit(t_expand_arg **args)
-// {
-        
-// }
+static int	is_num_arg(char *str)
+{
+	int	i;
 
-// int ft_exit(t_ast *ast, t_expand_arg **args)
-// {
-//     int i;
+	i = 0;
+	if (!str || !*str)
+		return (0);
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (!ft_isdigit(str[i]))
+		return (0);
+	while (ft_isdigit(str[i]))
+		i++;
+	return (str[i] == '\0');
+}
 
-//     i = 0;
-//     if (args[1]->value[0] == '-')
-// 		return (write(2, "rsh: cd: options are invalid\n", 29), 1);
-//     if (ft_isdigit())
-// }
+static void	free_and_exit(int exit_code)
+{
+	rl_clear_history();
+	free_garbage();
+	exit(exit_code);
+}
+
+int	ft_exit(t_ast *ast, t_expand_arg **args)
+{
+	int	argc;
+
+	argc = count_args(args);
+	(void)ast;
+	write(1, "exit\n", 5);
+	if (argc == 1)
+		free_and_exit(g_exit_status);
+	if (!is_num_arg(args[1]->value))
+	{
+		write(2, "rsh: exit: numeric argument required\n", 37);
+		free_and_exit(255);
+	}
+	if (argc > 2)
+	{
+		write(2, "rsh: exit: too many arguments\n", 30);
+		return (1);
+	}
+	free_and_exit((unsigned char)ft_atoi(args[1]->value));
+	return (0);
+}
