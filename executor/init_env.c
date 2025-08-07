@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 10:00:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/06 12:18:30 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/06 16:10:50 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	lst_size(t_env *env)
 	return (i);
 }
 
-void	change_values(t_env *env)
+static void	change_values(t_env *env)
 {
 	t_env	*tmp;
 	int		nb;
@@ -50,7 +50,7 @@ void	change_values(t_env *env)
 	}
 }
 
-void	hard_coding_env(t_exec *exec)
+static void	hard_coding_env(t_exec *exec)
 {
 	char	buff[4096];
 

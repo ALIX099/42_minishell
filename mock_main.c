@@ -14,13 +14,12 @@ int	main(int ac, char **av, char **envp)
 	exec = init_env(envp);
 	while (1)
 	{
-		line = readline(RED "rsh> " RESET);
+		line = readline("rsh> ");
 		if (!line)
 			break ;
 		cmds = parse(line); // Output: Abstract Syntax Tree
 		cmds->exec = &exec;
 		expand(cmds);
 		execute(cmds);
-		free(line);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:22:47 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/06 12:00:20 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 03:09:44 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,16 @@
 
 int	ft_env(t_ast *ast)
 {
-	char	**env;
-	int		i;
+    t_env *tmp;
 
-	i = 0;
-	env = append_to_array(ast->exec->my_env);
-	while (env[i])
-	{
-		printf("%s\n", env[i]);
-		free(env[i]);
-		i++;
-	}
-	free(env);
-	return (0);
+    if (!ast || !ast->exec || !ast->exec->my_env)
+		return (0);
+    tmp = ast->exec->my_env;
+    while (tmp)
+    {
+        if (tmp->value)
+            printf ("%s=%s\n", tmp->key, tmp->value);
+        tmp = tmp->next;
+    }
+    return (0);
 }

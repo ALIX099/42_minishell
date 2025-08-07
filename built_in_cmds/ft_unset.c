@@ -6,16 +6,19 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:57 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/05 08:55:43 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/07 05:29:43 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void	env_unset(t_env **head, const char *key)
+static void	get_unset(t_env **head, const char *key)
 {
 	t_env	*tmp;
 	t_env	*prev;
+
+	if (!head || !*head || !key)
+		return ;
 
 	tmp = *head;
 	prev = NULL;
@@ -35,4 +38,19 @@ void	env_unset(t_env **head, const char *key)
 		prev = tmp;
 		tmp = tmp->next;
 	}
+}
+
+int	ft_unset(t_env **head, t_expand_arg **args)
+{
+	int	i;
+
+	if (!head || !args)
+		return (1);
+	i = 1;
+	while (args[i])
+	{
+		get_unset(head, args[i]->value);
+		i++;
+	}
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/06 12:02:12 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/07 05:52:31 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ int	execute_command(t_ast *ast)
 		return (0);
 	if (!ft_strcmp(ast->argv[0]->value, "env"))
 		return (ft_env(ast));
-	// else if (!ft_strcmp(ast->argv[0]->value, "echo"))
-	// 	exit_code = ft_echo(ast);
-	// else if (!ft_strcmp(ast->argv[0]->value, "cd"))
-	// 	exit_code = ft_cd(ast);
-	// else if (!ft_strcmp(ast->argv[0]->value, "pwd"))
-	// 	exit_code = ft_pwd(ast);
+	else if (!ft_strcmp(ast->argv[0]->value, "unset"))
+		return (ft_unset(&ast->exec->my_env, ast->argv));
+	else if (!ft_strcmp(ast->argv[0]->value, "echo"))
+		return(ft_echo(ast->argv));
+	else if (!ft_strcmp(ast->argv[0]->value, "cd"))
+		return (ft_cd(ast->argv));
+	else if (!ft_strcmp(ast->argv[0]->value, "pwd"))
+		return (ft_pwd(ast->argv));
 	// else if (!ft_strcmp(ast->argv[0]->value, "export"))
 	// 	exit_code = ft_export(ast);
-	// else if (!ft_strcmp(ast->argv[0]->value, "unset"))
-	// 	exit_code = ft_unset(ast);
 	// else if (!ft_strcmp(ast->argv[0]->value, "exit"))
 	// 	exit_code = ft_exit(ast);
 	// else
