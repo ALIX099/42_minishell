@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/07 21:33:07 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:17:19 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	execute_command(t_ast *ast)
 	// 	exit_code = ft_export(ast);
 	else if (!ft_strcmp(ast->argv[0]->value, "exit"))
 		return(ft_exit(ast, ast->argv));
-	// else
-		// return(exec_external(ast));
+	else
+		return(exec_external(ast));
 	return (127);
 }
 

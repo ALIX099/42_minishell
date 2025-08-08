@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 23:14:11 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/08 10:33:53 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+static void	free_env_list(t_env *env)
+{
+	t_env *tmp;
+
+	while (env)
+	{
+		tmp = env;
+		env = env->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
+	}
+}
 
 static int	is_num_arg(char *str)
 {
@@ -28,13 +42,6 @@ static int	is_num_arg(char *str)
 	return (str[i] == '\0');
 }
 
-static void	free_and_exit(int exit_code)
-{
-	rl_clear_history();
-	free_garbage();
-	exit(exit_code);
-}
-
 int	ft_exit(t_ast *ast, t_expand_arg **args)
 {
 	int	argc;
@@ -42,18 +49,20 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 	argc = count_args(args);
 	(void)ast;
 	write(1, "exit\n", 5);
-	if (argc == 1)
-		free_and_exit(g_exit_status);
+	// if (argc == 1)
+		// free_and_exit(g_exit_status);
 	if (!is_num_arg(args[1]->value))
 	{
 		write(2, "rsh: exit: numeric argument required\n", 37);
-		free_and_exit(255);
+        free_env_list(ast->exec->my_env);
+	    exit(255);
 	}
 	if (argc > 2)
 	{
 		write(2, "rsh: exit: too many arguments\n", 30);
 		return (1);
 	}
-	free_and_exit((unsigned char)ft_atoi(args[1]->value));
+    free_env_list(ast->exec->my_env);
+    exit((unsigned char)ft_atoi(args[1]->value));
 	return (0);
 }

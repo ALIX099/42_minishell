@@ -6,8 +6,13 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:03 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/06 13:39:46 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/08 12:17:07 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int ft_export(t_ast *ast, t_expand_arg **args)
+{
+    
+}

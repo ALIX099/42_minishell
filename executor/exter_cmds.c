@@ -1,0 +1,110 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exter_cmds.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
+/*   Updated: 2025/08/08 12:02:50 by macbookpro       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../headers/minishell.h"
+
+char	*find_cmnd_path_helper(char **path, char *cmnd)
+{
+	char	*full_path;
+	int		i;
+
+	i = 0;
+	while (path[i])
+	{
+		full_path = ft_strjoin(path[i], "/");
+		full_path = ft_strjoin_free(full_path, cmnd);
+		if (!access(full_path, X_OK))
+			return (full_path);
+		i++;
+	}
+	return (NULL);
+}
+
+char	*find_cmnd_path(t_ast *gc, char *cmnd, t_env *env)
+{
+	char	*path_env;
+	char	**path;
+	char	*result;
+
+	if (cmnd[0] == '/' || cmnd[0] == '.')
+	{
+		if (access(cmnd, F_OK) == -1)
+			return (NULL);
+		if (access(cmnd, X_OK) == -1)
+			return (gc_strdup(gc, cmnd));
+		return (gc_strdup(gc, cmnd));
+	}
+	path_env = get_env_value(env, "PATH");
+	if (!path_env || !cmnd)
+		return (NULL);
+	path = ft_split(path_env, ':');
+	if (!path)
+		return (NULL);
+	result = find_cmnd_path_helper(path, cmnd);
+	if (result)
+		return (result);
+	return (NULL);
+}
+
+int	check_cmd_path(t_command *cmd, char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0)
+	{
+		if (S_ISDIR(st.st_mode))
+		{
+			write(2, "minishell: ", 11);
+			write(2, cmd->args[0], strlen(cmd->args[0]));
+			write(2, ": Is a directory\n", 17);
+			return (126);
+		}
+		if (access(path, X_OK) == -1)
+		{
+			write(2, "minishell: ", 11);
+			write(2, cmd->args[0], strlen(cmd->args[0]));
+			write(2, ": Permission denied\n", 20);
+			return (126);
+		}
+	}
+	else
+		return (handle_stat_error(cmd));
+	return (0);
+}
+
+int	shell(t_gc *gc, t_command *cmnd, t_env *env)
+{
+	pid_t	child_pid;
+	char	**args;
+	char	*path;
+
+	if (!cmnd || !cmnd->args || !cmnd->args[0])
+		return (0);
+	if (cmnd->args[0][0] == '\0')
+		return (0);
+	path = find_cmnd_path(gc, cmnd->args[0], env);
+	if (!path)
+	{
+		is_not_found(cmnd->args[0]);
+		return (127);
+	}
+	if (check_cmd_path(cmnd, path) != 0)
+		return (0);
+	args = list_to_array(gc, env);
+	child_pid = fork();
+	if (child_pid == -1)
+		return (handle_fork_error());
+	if (child_pid == 0)
+		handle_child_process(cmnd, path, args, cmnd->args);
+	handle_parent_process(0, cmnd);
+	return (0);
+}
