@@ -14,7 +14,7 @@
 
 static void	free_env_list(t_env *env)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	while (env)
 	{
@@ -50,19 +50,19 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 	(void)ast;
 	write(1, "exit\n", 5);
 	// if (argc == 1)
-		// free_and_exit(g_exit_status);
+	// free_and_exit(g_exit_status);
 	if (!is_num_arg(args[1]->value))
 	{
 		write(2, "rsh: exit: numeric argument required\n", 37);
-        free_env_list(ast->exec->my_env);
-	    exit(255);
+		free_env_list(ast->exec->my_env);
+		exit(255);
 	}
 	if (argc > 2)
 	{
 		write(2, "rsh: exit: too many arguments\n", 30);
 		return (1);
 	}
-    free_env_list(ast->exec->my_env);
-    exit((unsigned char)ft_atoi(args[1]->value));
+	free_env_list(ast->exec->my_env);
+	exit((unsigned char)ft_atoi(args[1]->value));
 	return (0);
 }

@@ -41,11 +41,11 @@ static void	change_values(t_env *env)
 			free(tmp->value);
 			tmp->value = ft_itoa(nb + 1);
 		}
-        else if (!ft_strcmp(tmp->key, "_"))
-        {
-            free(tmp->value);
-            tmp->value = ft_strdup("/usr/bin/env");
-        }
+		else if (!ft_strcmp(tmp->key, "_"))
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup("/usr/bin/env");
+		}
 		tmp = tmp->next;
 	}
 }

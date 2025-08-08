@@ -13,18 +13,18 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "../libft/libft.h"
 # include "minishell_parser.h"
+# include <fcntl.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <unistd.h>
-#include <stdbool.h>
-# include "../libft/libft.h"
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdio.h>
-#include <signal.h>
-#include <fcntl.h>
 
 # define RED "\033[1;31m"
 # define YELLOW "\033[1;33m"
@@ -41,8 +41,8 @@ typedef struct s_env
 
 typedef struct s_exec
 {
-	t_env			*my_env; //freed all linked list
-	char			**env;// need to be freed after
+	t_env *my_env; // freed all linked list
+	char **env;    // need to be freed after
 	char			*pwd;
 	bool			empty_env;
 	int				exit_value;
@@ -55,15 +55,15 @@ t_env				*env_new(const char *key, const char *value);
 void				add_back(t_env **env, t_env *to_add);
 char				*ft_strjoin_free(char *s1, const char *s2);
 char				**append_to_array(t_env *env);
-int	                lst_size(t_env *env);
+int					lst_size(t_env *env);
 int					count_args(t_expand_arg **args);
-int 				get_env(t_ast *ast, const char *key);
+int					get_env(t_ast *ast, const char *key);
 int					ft_env(t_ast *ast);
-int	                ft_unset(t_env **head, t_expand_arg **args);
-int                 ft_echo(t_expand_arg **args);
-int                 ft_pwd(t_expand_arg **args);
-int	                ft_cd(t_ast *ast, t_expand_arg **args);
-int	ft_exit(t_ast *ast, t_expand_arg **args);
+int					ft_unset(t_env **head, t_expand_arg **args);
+int					ft_echo(t_expand_arg **args);
+int					ft_pwd(t_expand_arg **args);
+int					ft_cd(t_ast *ast, t_expand_arg **args);
+int					ft_exit(t_ast *ast, t_expand_arg **args);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

@@ -12,7 +12,6 @@
 
 #include "../headers/minishell.h"
 
-int ft_export(t_ast *ast, t_expand_arg **args)
+int	ft_export(t_ast *ast, t_expand_arg **args)
 {
-    
 }

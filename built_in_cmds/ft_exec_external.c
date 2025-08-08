@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exter_cmds.c                                       :+:      :+:    :+:   */
+/*   ft_exec_external.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/08 12:02:50 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/08 21:32:58 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*find_cmnd_path_helper(char **path, char *cmnd)
 	return (NULL);
 }
 
-char	*find_cmnd_path(t_ast *gc, char *cmnd, t_env *env)
+char	*find_path(t_ast *ast, char *cmnd)
 {
 	char	*path_env;
 	char	**path;
@@ -37,25 +37,25 @@ char	*find_cmnd_path(t_ast *gc, char *cmnd, t_env *env)
 
 	if (cmnd[0] == '/' || cmnd[0] == '.')
 	{
-		if (access(cmnd, F_OK) == -1)
+		if (access(cmnd, F_OK) == -1 || access(cmnd, X_OK) == -1)
 			return (NULL);
 		if (access(cmnd, X_OK) == -1)
-			return (gc_strdup(gc, cmnd));
-		return (gc_strdup(gc, cmnd));
+			return (gc_strdup(ast, cmnd));
+		return (gc_strdup(ast, cmnd));
 	}
-	path_env = get_env_value(env, "PATH");
+	path_env = get_env_value(ast->exec->my_env, "PATH");
 	if (!path_env || !cmnd)
 		return (NULL);
 	path = ft_split(path_env, ':');
 	if (!path)
 		return (NULL);
 	result = find_cmnd_path_helper(path, cmnd);
-	if (result)
-		return (result);
-	return (NULL);
+	if (!result)
+		return (NULL);
+	return (result);
 }
 
-int	check_cmd_path(t_command *cmd, char *path)
+int	check_cmd_path(t_ast *ast, char *path)
 {
 	struct stat	st;
 
@@ -64,14 +64,14 @@ int	check_cmd_path(t_command *cmd, char *path)
 		if (S_ISDIR(st.st_mode))
 		{
 			write(2, "minishell: ", 11);
-			write(2, cmd->args[0], strlen(cmd->args[0]));
+			write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]));
 			write(2, ": Is a directory\n", 17);
 			return (126);
 		}
 		if (access(path, X_OK) == -1)
 		{
 			write(2, "minishell: ", 11);
-			write(2, cmd->args[0], strlen(cmd->args[0]));
+			write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]->value));
 			write(2, ": Permission denied\n", 20);
 			return (126);
 		}
@@ -81,25 +81,23 @@ int	check_cmd_path(t_command *cmd, char *path)
 	return (0);
 }
 
-int	shell(t_gc *gc, t_command *cmnd, t_env *env)
+int	shell(t_ast *ast, t_expand_arg **args)
 {
-	pid_t	child_pid;
-	char	**args;
-	char	*path;
+	pid_t child_pid;
+	char **args;
+	char *path;
 
-	if (!cmnd || !cmnd->args || !cmnd->args[0])
+	if (!ast || !args || args[0]->value[0] == '\0')
 		return (0);
-	if (cmnd->args[0][0] == '\0')
-		return (0);
-	path = find_cmnd_path(gc, cmnd->args[0], env);
+	path = find_path(ast, ast->argv[0]->value);
 	if (!path)
 	{
-		is_not_found(cmnd->args[0]);
+		is_not_found(args[0]);
 		return (127);
 	}
-	if (check_cmd_path(cmnd, path) != 0)
+	if (check_cmd_path(ast, path) != 0)
 		return (0);
-	args = list_to_array(gc, env);
+	args = append_to_array(ast->exec->my_env);
 	child_pid = fork();
 	if (child_pid == -1)
 		return (handle_fork_error());

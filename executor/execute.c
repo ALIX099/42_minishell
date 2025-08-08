@@ -21,17 +21,17 @@ int	execute_command(t_ast *ast)
 	else if (!ft_strcmp(ast->argv[0]->value, "unset"))
 		return (ft_unset(&ast->exec->my_env, ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "echo"))
-		return(ft_echo(ast->argv));
+		return (ft_echo(ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "cd"))
-		return (ft_cd(ast , ast->argv));
+		return (ft_cd(ast, ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "pwd"))
 		return (ft_pwd(ast->argv));
 	// else if (!ft_strcmp(ast->argv[0]->value, "export"))
 	// 	exit_code = ft_export(ast);
 	else if (!ft_strcmp(ast->argv[0]->value, "exit"))
-		return(ft_exit(ast, ast->argv));
+		return (ft_exit(ast, ast->argv));
 	else
-		return(exec_external(ast));
+		return (exec_external(ast));
 	return (127);
 }
 
