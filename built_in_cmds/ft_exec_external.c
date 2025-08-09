@@ -6,56 +6,42 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/08 21:32:58 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/10 00:50:48 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-char	*find_cmnd_path_helper(char **path, char *cmnd)
+static char	*find_command_path(t_ast *ast)
 {
+	char	*path_env;
+	char	**paths;
 	char	*full_path;
 	int		i;
 
+	if (ast->argv[0]->value[0] == '/' || ast->argv[0]->value[0] == '.')
+		return (ft_strdup(ast->argv[0]->value));
+	path_env = get_env_value(ast->exec->my_env, "PATH");
+	if (!path_env)
+		return (NULL);
+	paths = ft_split(path_env, ':');
+	if (!paths)
+		return (NULL);
+
 	i = 0;
-	while (path[i])
+	while (paths[i])
 	{
-		full_path = ft_strjoin(path[i], "/");
-		full_path = ft_strjoin_free(full_path, cmnd);
-		if (!access(full_path, X_OK))
+		full_path = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin_free(full_path, ast->argv[0]->value);
+		if (access(full_path, X_OK) == 0)
 			return (full_path);
+		free(full_path);
 		i++;
 	}
 	return (NULL);
 }
 
-char	*find_path(t_ast *ast, char *cmnd)
-{
-	char	*path_env;
-	char	**path;
-	char	*result;
-
-	if (cmnd[0] == '/' || cmnd[0] == '.')
-	{
-		if (access(cmnd, F_OK) == -1 || access(cmnd, X_OK) == -1)
-			return (NULL);
-		if (access(cmnd, X_OK) == -1)
-			return (gc_strdup(ast, cmnd));
-		return (gc_strdup(ast, cmnd));
-	}
-	path_env = get_env_value(ast->exec->my_env, "PATH");
-	if (!path_env || !cmnd)
-		return (NULL);
-	path = ft_split(path_env, ':');
-	if (!path)
-		return (NULL);
-	result = find_cmnd_path_helper(path, cmnd);
-	if (!result)
-		return (NULL);
-	return (result);
-}
-
-int	check_cmd_path(t_ast *ast, char *path)
+static int	check_command_errors(t_ast *ast, char *path)
 {
 	struct stat	st;
 
@@ -63,46 +49,56 @@ int	check_cmd_path(t_ast *ast, char *path)
 	{
 		if (S_ISDIR(st.st_mode))
 		{
-			write(2, "minishell: ", 11);
-			write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]));
+			write(2, "rsh: ", 5);
+			write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]->value));
 			write(2, ": Is a directory\n", 17);
 			return (126);
 		}
 		if (access(path, X_OK) == -1)
 		{
-			write(2, "minishell: ", 11);
+			write(2, "rsh: ", 5);
 			write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]->value));
 			write(2, ": Permission denied\n", 20);
 			return (126);
 		}
 	}
 	else
-		return (handle_stat_error(cmd));
-	return (0);
-}
-
-int	shell(t_ast *ast, t_expand_arg **args)
-{
-	pid_t child_pid;
-	char **args;
-	char *path;
-
-	if (!ast || !args || args[0]->value[0] == '\0')
-		return (0);
-	path = find_path(ast, ast->argv[0]->value);
-	if (!path)
 	{
-		is_not_found(args[0]);
+		perror(ast->argv[0]->value);
 		return (127);
 	}
-	if (check_cmd_path(ast, path) != 0)
-		return (0);
-	args = append_to_array(ast->exec->my_env);
-	child_pid = fork();
-	if (child_pid == -1)
-		return (handle_fork_error());
-	if (child_pid == 0)
-		handle_child_process(cmnd, path, args, cmnd->args);
-	handle_parent_process(0, cmnd);
 	return (0);
 }
+
+int	exec_external(t_ast *ast)
+{
+	pid_t	pid;
+	char	**args;
+	char	*path;
+	int		status;
+
+	path = find_command_path(ast);
+	if (!path)
+	{
+		write(2, "rsh: ", 5);
+		write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]->value));
+		write(2, ": command not found\n", 21);
+		return (127);
+	}
+	if ((status = check_command_errors(ast, path)) != 0)
+		return (status);
+
+	args = expand_args_to_array(ast->argv);
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), 1);
+	if (pid == 0)
+	{
+		execve(path, args, ast->exec->env);
+		perror("execve");
+		_exit(126);
+	}
+	waitpid(pid, &status, 0);
+	return (WIFEXITED(status) ? WEXITSTATUS(status) : 1);
+}
+

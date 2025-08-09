@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/08 11:55:56 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/09 23:55:23 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 # include <string.h>
 # include <sys/types.h>
 # include <unistd.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 # define RED "\033[1;31m"
 # define YELLOW "\033[1;33m"
@@ -41,8 +44,8 @@ typedef struct s_env
 
 typedef struct s_exec
 {
-	t_env *my_env; // freed all linked list
-	char **env;    // need to be freed after
+	t_env 			*my_env; // freed all linked list
+	char 			**env;    // need to be freed after
 	char			*pwd;
 	bool			empty_env;
 	int				exit_value;
