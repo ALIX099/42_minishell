@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 10:00:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/08 12:04:05 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/10 18:21:43 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ t_exec	init_env(char **envp)
 	return (exec);
 }
 
-char	**append_to_array(t_env *env)
+char	**append_to_array(t_env *env, int env_or_export)
 {
 	char	*first;
 	char	**array;
@@ -111,13 +111,13 @@ char	**append_to_array(t_env *env)
 		if (tmp->value)
 		{
 			first = ft_strjoin(tmp->key, "=");
-			array[i] = ft_strjoin_free(first, tmp->value);
+			array[i++] = ft_strjoin_free(first, tmp->value);
 		}
+		else if (env_or_export == 0)
+			array[i++] = ft_strjoin(tmp->key, "=");
 		else
-			array[i] = ft_strjoin(tmp->key, "=");
-		i++;
+			array[i++] = ft_strdup(tmp->key);
 		tmp = tmp->next;
 	}
-	array[i] = NULL;
-	return (array);
+	return (array[i] = NULL, array);
 }

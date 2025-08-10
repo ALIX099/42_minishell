@@ -6,13 +6,13 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/08 12:21:14 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/10 11:49:26 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-int	check_echo_flag(t_expand_arg **args, int *start)
+static int	check_echo_flag(t_expand_arg **args, int *start)
 {
 	int	i;
 	int	n_flag;
