@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/10 00:50:48 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/10 08:55:30 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	exec_external(t_ast *ast)
 	if ((status = check_command_errors(ast, path)) != 0)
 		return (status);
 
-	args = expand_args_to_array(ast->argv);
+	args = append_args(ast->argv);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);

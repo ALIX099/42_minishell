@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/09 23:55:23 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/10 08:55:59 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char				**append_to_array(t_env *env);
 int					lst_size(t_env *env);
 int					count_args(t_expand_arg **args);
 int					get_env(t_ast *ast, const char *key);
+char				**append_args(t_expand_arg **argv);
 int					ft_env(t_ast *ast);
 int					ft_unset(t_env **head, t_expand_arg **args);
 int					ft_echo(t_expand_arg **args);
