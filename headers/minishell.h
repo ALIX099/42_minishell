@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/10 22:15:18 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/10 23:56:40 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int					ft_exit(t_ast *ast, t_expand_arg **args);
 int					ft_export(t_ast *ast, t_expand_arg **args);
 int					ft_external_cmds(t_ast *ast);
 void				command_not_found(char *s);
+void				update_env_value(t_env *env_list, const char *key, const char *value);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 
