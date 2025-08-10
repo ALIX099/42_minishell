@@ -5,7 +5,7 @@ ARCHIVE=libft/libft.a
 TARGET=minishell
 
 $(TARGET): $(SRCS) $(ARCHIVE)
-	$(CC) $(CFLAGS) -v -lreadline $^ -o $@
+	$(CC) $(CFLAGS) -lreadline $^ -o $@
 	@echo "Compilation complete. Run './$(TARGET)' to start the shell."
 
 $(ARCHIVE):

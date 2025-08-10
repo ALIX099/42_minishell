@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_external.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/10 18:31:47 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/10 22:22:43 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,12 @@ static int	check_command_errors(t_ast *ast, char *path)
 	if (stat(path, &st) == 0)
 	{
 		if (S_ISDIR(st.st_mode))
-			return (write(2, "rsh: ", 5), write(2, ast->argv[0]->value, ft_strlen(ast->argv[0]->value)), 
-				write(2, ": Is a directory\n", 17), 126);
+			return (write(2, "rsh: ", 5), write(2, ast->argv[0]->value,
+					ft_strlen(ast->argv[0]->value)), write(2,
+					": Is a directory\n", 17), 126);
 		if (access(path, X_OK) == -1)
-			return (write(2, "rsh: ", 5), write(2, ": Permission denied\n", 20), 126);
+			return (write(2, "rsh: ", 5), write(2, ": Permission denied\n", 20),
+				126);
 	}
 	else
 		return (perror(ast->argv[0]->value), 127);
@@ -66,20 +68,21 @@ int	ft_external_cmds(t_ast *ast)
 
 	path = find_path(ast);
 	if (!path)
-		return (write(2, "rsh: ", 5), write(2, ": command not found\n", 21), 127);
+		return (command_not_found(ast->argv[0]->value), 127);
 	status = check_command_errors(ast, path);
 	if (status != 0)
 		return (status);
 	args = append_args(ast->argv);
+	ast->exec->env = append_to_array(ast->exec->my_env, 0);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);
 	if (pid == 0)
-		return (execve(path, args, ast->exec->env), perror("execve"), exit(126), 126);
+		return (execve(path, args, ast->exec->env), exit(126), 126);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
-		return WEXITSTATUS(status);
+		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
-    	return (128 + WTERMSIG(status));
-    return (1);
+		return (128 + WTERMSIG(status));
+	return (1);
 }
