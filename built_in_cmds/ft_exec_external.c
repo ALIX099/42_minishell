@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/11 00:57:38 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/11 01:03:56 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*find_path(t_ast *ast)
 	return (NULL);
 }
 
-static int	check_command_errors(t_ast *ast, char *path)
+static int	check_errors(t_ast *ast, char *path)
 {
 	struct stat	st;
 
@@ -56,6 +56,7 @@ static int	check_command_errors(t_ast *ast, char *path)
 	}
 	else
 		return (perror(ast->argv[0]->value), 127);
+	ast->exec->env = append_to_array(ast->exec->my_env, 0);
 	return (0);
 }
 
@@ -71,11 +72,10 @@ int	ft_external_cmds(t_ast *ast)
 	path = find_path(ast);
 	if (!path)
 		return (command_not_found(ast->argv[0]->value), 127);
-	status = check_command_errors(ast, path);
+	status = check_errors(ast, path);
 	if (status != 0)
 		return (status);
 	args = append_args(ast->argv);
-	ast->exec->env = append_to_array(ast->exec->my_env, 0);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork"), 1);

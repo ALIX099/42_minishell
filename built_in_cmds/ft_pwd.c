@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:01 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/07 21:13:18 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/11 01:10:19 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	ft_pwd(t_expand_arg **args)
 	char	*cwd;
 
 	(void)args;
+	if (args[1]->value && !args[1]->value[0])
+		return (perror("rsh: pwd"), 1);
 	if (count_args(args) > 1 && args[1]->value[0] == '-')
 		return (write(2, "rsh: pwd: options are invalid\n", 30), 1);
 	cwd = getcwd(buffer, sizeof(buffer));

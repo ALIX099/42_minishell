@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/10 21:43:31 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/11 01:09:00 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	execute_command(t_ast *ast)
 	else if (!ft_strcmp(ast->argv[0]->value, "pwd"))
 		return (ft_pwd(ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "export"))
-		return(ft_export(ast, ast->argv));
+		return (ft_export(ast, ast->argv));
 	else if (!ft_strcmp(ast->argv[0]->value, "exit"))
 		return (ft_exit(ast, ast->argv));
 	else
@@ -56,7 +56,7 @@ int	execute_command(t_ast *ast)
 int	execute(t_ast *ast)
 {
 	// print_ast("root", ast, 0);
-	if (!ast || !ast->argv || !ast->argv[0])
+	if (!ast || !ast->argv || !ast->argv[0]->value)
 		return (0);
 	if (ast->type == NODE_CMD)
 		return (execute_command(ast));
