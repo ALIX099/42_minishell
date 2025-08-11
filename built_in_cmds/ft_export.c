@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:03 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/11 00:45:13 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/11 19:09:59 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,56 +40,54 @@ void	print_export(t_exec *data)
 	free(export_array);
 }
 
-static int	valid_export(t_expand_arg **args)
+static int	valid_export(char *value)
 {
 	int	j;
-	int	i;
 
-	i = 0;
-	while (args[++i])
+	if (!value)
+		return (0);
+	if (!ft_isalpha(value[0]) && value[0] != '_')
+		return (write(2, "rsh: export: ", 13), write(2, value,
+				ft_strlen(value)), write(2, ": not a valid identifier\n", 25),
+			0);
+	j = 0;
+	while (value[++j] && value[j] != '=')
 	{
-		if (!ft_isalpha(args[i]->value[0]) && args[i]->value[0] != '_')
-			return (write(2, "rsh : bash: export: ", 20), write(2,
-					args[1]->value, ft_strlen(args[1]->value)), write(2,
-					": not a valid identifier\n", 25), 0);
-		j = 0;
-		while (args[i]->value[++j] && args[i]->value[j] != '=')
-		{
-			if (!ft_isalnum(args[i]->value[j]))
-				return (write(2, "rsh : bash: export: ", 20), write(2,
-						args[1]->value, ft_strlen(args[1]->value)), write(2,
-						": not a valid identifier\n", 25), 0);
-		}
+		if (!ft_isalnum(value[j]) && value[j] != '_')
+			return (write(2, "rsh: export: ", 13), write(2, value,
+					ft_strlen(value)), write(2, ": not a valid identifier\n",
+					25), 0);
 	}
 	return (1);
 }
 
-void	export_args(t_ast *ast, t_expand_arg **args)
+static void	export_args(t_expand_arg **args, t_exec *data)
 {
 	int		i;
-	char	*key;
-	char	*value;
-	char	*equal_sign;
+	char	*sign;
 
 	i = 0;
-	while (args[++i])
+	while (args[++i] != 0 && args[i]->value)
 	{
-		equal_sign = ft_strchr(args[i]->value, '=');
-		if (equal_sign)
+		if (!valid_export(args[i]->value))
+			continue;
+		sign = ft_strchr(args[i]->value, '=');
+		if (sign)
 		{
-			key = ft_substr(args[i]->value, 0, equal_sign - args[i]->value);
-			value = ft_strdup(equal_sign + 1);
+			data->key = ft_substr(args[i]->value, 0, sign
+					- args[i]->value);
+			data->value = ft_strdup(sign + 1);
 		}
 		else
 		{
-			key = ft_strdup(args[i]->value);
-			value = NULL;
+			data->key = ft_strdup(args[i]->value);
+			data->value = NULL;
 		}
+		update_env_value(data->my_env, data->key, data->value);
+		if (!get_env(data->my_env, data->key))
+			add_back(&data->my_env, env_new(data->key, data->value));
+		(free(data->key), free(data->value));
 	}
-	if (get_env(ast, key))
-		update_env_value(ast->exec->my_env, key, value);
-	else
-		add_back(&ast->exec->my_env, env_new(key, value));
 }
 
 int	ft_export(t_ast *ast, t_expand_arg **args)
@@ -102,8 +100,6 @@ int	ft_export(t_ast *ast, t_expand_arg **args)
 				": not a valid identifier\n", 25), 1);
 	if (count_args(args) > 1 && args[1]->value[0] == '-')
 		return (write(2, "rsh: export: options are invalid\n", 30), 1);
-	if (!valid_export(args))
-		return (1);
-	export_args(ast, args);
+	export_args(args, ast->exec);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/10 23:56:40 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/11 19:08:48 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ typedef struct s_exec
 	char			*pwd;
 	bool			empty_env;
 	int				exit_value;
+	char			*key;
+	char 			*value;
 }					t_exec;
 
 void				expand(t_ast *ast);
@@ -46,7 +48,7 @@ char				*ft_strjoin_free(char *s1, const char *s2);
 char				**append_to_array(t_env *env, int env_or_export);
 int					lst_size(t_env *env);
 int					count_args(t_expand_arg **args);
-int					get_env(t_ast *ast, const char *key);
+int					get_env(t_env *env, const char *key);
 char				**append_args(t_expand_arg **argv);
 void				sort_env_array(char **arr);
 char				*get_env_value(t_env *env, const char *key);
