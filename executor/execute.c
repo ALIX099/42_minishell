@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/11 01:09:00 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/12 00:41:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,11 @@ int	execute(t_ast *ast)
 	if (!ast || !ast->argv || !ast->argv[0]->value)
 		return (0);
 	if (ast->type == NODE_CMD)
+	{
+		if (ast->redirects != NULL)
+			return (ft_redirections(ast));
 		return (execute_command(ast));
+	}
 	// if (ast->type == NODE_PIPE)
 	// 	return (execute_pipeline(ast));
 	// if (ast->type == NODE_SUBSHELL)
