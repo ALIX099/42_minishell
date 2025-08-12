@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/12 00:41:48 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/12 23:44:26 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void				sort_env_array(char **arr);
 char				*get_env_value(t_env *env, const char *key);
 int					ft_env(t_ast *ast);
 int					ft_unset(t_env **head, t_expand_arg **args);
-int					ft_echo(t_expand_arg **args);
+int					ft_echo(t_ast *ast, t_expand_arg **args);
 int					ft_pwd(t_expand_arg **args);
 int					ft_cd(t_ast *ast, t_expand_arg **args);
 int					ft_exit(t_ast *ast, t_expand_arg **args);
@@ -63,7 +63,8 @@ int					ft_external_cmds(t_ast *ast);
 void				command_not_found(char *s);
 void				update_env_value(t_env *env_list, const char *key,
 						const char *value);
-int 				ft_redirections(t_ast *ast);
+int 				ft_redirections(t_ast *ast, t_redirect *r);
+int					execute_command(t_ast *ast);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 
