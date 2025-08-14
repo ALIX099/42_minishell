@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 02:33:37 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:49:27 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,6 @@ int	execute_command(t_ast *ast)
 	return (0);
 }
 
-int	execute_pipeline(t_ast *ast)
-{
-	if (count_pipes(ast) == 1)
-		return (ast->exec->exit_value = ft_single(ast));
-	// else
-	// 	return (ft_multiple());
-	return (0);
-}
 
 // int	execute_subshell(t_ast *ast)
 // {
@@ -60,7 +52,7 @@ int	execute_pipeline(t_ast *ast)
 
 int	execute(t_ast *ast)
 {
-	// print_ast("root", ast, 0);
+	print_ast("root", ast, 0);
 	if (!ast)
 		return (0);
 	if (ast->type == NODE_CMD)
@@ -71,7 +63,7 @@ int	execute(t_ast *ast)
 		return (execute_command(ast));
 	}
 	if (ast->type == NODE_PIPE)
-		return (execute_pipeline(ast));
+		return (ast->exec->exit_value = ft_pipeline(ast));
 	// if (ast->type == NODE_SUBSHELL)
 	// 	return (execute_subshell(ast));
 	// if (ast->type == NODE_AND || ast->type == NODE_OR)

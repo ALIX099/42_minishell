@@ -39,7 +39,7 @@ int	main(int ac, char **av, char **envp)
 		// free(line);
 		// free_ast(cmds); // Free AST from parse()
 	}
-	rl_clear_history();
+	// rl_clear_history();
 	// cleanup_env(&exec);
 	return (0);
 }

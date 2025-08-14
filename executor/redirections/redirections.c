@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/12 19:11:34 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:36:40 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,7 @@ static int r_append(t_ast *ast, t_redirect *r)
 int	ft_redirections(t_ast *ast, t_redirect *r)
 {
 	t_redirect	*tmp;
-	int			i;
 
-	i = 0;
 	tmp = r;
 	while (tmp)
 	{

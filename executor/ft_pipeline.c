@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_single.c                                        :+:      :+:    :+:   */
+/*   ft_pipeline.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/14 02:36:37 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:51:38 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static void	ft_single_right(t_ast *right, int fds[2])
 	exit(exit_status);
 }
 
-int	ft_single(t_ast *ast)
+int	ft_pipeline(t_ast *ast)
 {
 	int		status;
 	int		fds[2];
