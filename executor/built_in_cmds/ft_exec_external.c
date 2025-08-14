@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_external.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/11 01:03:56 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/15 00:34:26 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	ft_external_cmds(t_ast *ast)
 		return (0);
 	path = find_path(ast);
 	if (!path)
-		return (command_not_found(ast->argv[0]->value), 127);
+		return (command_not_found(ast->argv[0]->value), 1);
 	status = check_errors(ast, path);
 	if (status != 0)
 		return (status);

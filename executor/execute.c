@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 23:49:27 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/14 23:59:16 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	execute_command(t_ast *ast)
 
 int	execute(t_ast *ast)
 {
-	print_ast("root", ast, 0);
+	// print_ast("root", ast, 0);
 	if (!ast)
 		return (0);
 	if (ast->type == NODE_CMD)
@@ -64,9 +64,9 @@ int	execute(t_ast *ast)
 	}
 	if (ast->type == NODE_PIPE)
 		return (ast->exec->exit_value = ft_pipeline(ast));
-	// if (ast->type == NODE_SUBSHELL)
-	// 	return (execute_subshell(ast));
 	// if (ast->type == NODE_AND || ast->type == NODE_OR)
 	// 	return (execute_and(ast));
+	// if (ast->type == NODE_SUBSHELL)
+	// 	return (execute_subshell(ast));
 	return (0); // Exit Status
 }
