@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/14 02:00:10 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 02:36:37 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	ft_single_right(t_ast *right, int fds[2])
 		perror("dup2");
 		exit(1);
 	}
-    right->exec->is_child = 1;
+	right->exec->is_child = 1;
 	exit_status = execute(right);
 	close(fds[0]);
 	// free_all();
@@ -47,6 +47,7 @@ static void	ft_single_right(t_ast *right, int fds[2])
 
 int	ft_single(t_ast *ast)
 {
+	int		status;
 	int		fds[2];
 	pid_t	pid_left;
 	pid_t	pid_right;
@@ -63,9 +64,12 @@ int	ft_single(t_ast *ast)
 		return (perror("fork"), 1);
 	if (pid_right == 0)
 		ft_single_right(ast->right, fds);
-	close(fds[0]);
-	close(fds[1]);
-	waitpid(pid_left, NULL, 0);
-	waitpid(pid_right, NULL, 0);
+	(close(fds[0]), close(fds[1]));
+	waitpid(pid_left, &status, 0);
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		return (kill(pid_right, SIGKILL), WEXITSTATUS(status));
+	waitpid(pid_right, &status, 0);
+	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+		return (WEXITSTATUS(status));
 	return (0);
 }

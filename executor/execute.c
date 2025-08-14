@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 02:01:07 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 02:33:37 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	execute_command(t_ast *ast)
 int	execute_pipeline(t_ast *ast)
 {
 	if (count_pipes(ast) == 1)
-		return (ft_single(ast));
+		return (ast->exec->exit_value = ft_single(ast));
 	// else
 	// 	return (ft_multiple());
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 01:54:59 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 02:21:21 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "minishell_parser.h"
+# include <signal.h>
 
 # define RED "\033[1;31m"
 # define YELLOW "\033[1;33m"
