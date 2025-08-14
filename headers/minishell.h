@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/12 23:44:26 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 01:54:59 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_exec
 	char			*pwd;
 	bool			empty_env;
 	int				exit_value;
+	int				is_child;
 	char			*key;
 	char			*value;
 }					t_exec;
@@ -65,6 +66,8 @@ void				update_env_value(t_env *env_list, const char *key,
 						const char *value);
 int 				ft_redirections(t_ast *ast, t_redirect *r);
 int					execute_command(t_ast *ast);
+int					count_pipes(t_ast *ast);
+int					ft_single(t_ast *ast);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

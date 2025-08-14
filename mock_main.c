@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+void populate_exec_tree(t_ast **ast, t_exec *exec)
+{
+	if (!*ast)
+		return ;
+	(*ast)->exec = exec;
+	populate_exec_tree(&(*ast)->left, exec);
+	populate_exec_tree(&(*ast)->right, exec);
+}
+
 int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 {
 	*line = readline("rsh> ");
@@ -9,7 +18,7 @@ int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 		add_history(*line);
 	*cmds = parse(*line); // Output: Abstract Syntax Tree
 	if (*cmds)
-		(*cmds)->exec = exec;
+		populate_exec_tree(cmds, exec);
 	return (1);
 }
 
@@ -21,12 +30,13 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	ft_memset(&(exec.is_child), 0, sizeof(int));
 	exec = init_env(envp);
 	while (ft_readline(&line, &cmds, &exec))
 	{
 		expand(cmds);
 		execute(cmds);
-		free(line);
+		// free(line);
 		// free_ast(cmds); // Free AST from parse()
 	}
 	rl_clear_history();

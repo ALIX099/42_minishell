@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/12 23:55:10 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 02:10:26 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	ft_echo(t_ast *ast, t_expand_arg **args)
 	int	i;
 	int	n_flag;
 
+	if (!args[1])
+		return (write(1, "\n", 1), 1);
 	if (args[1]->value && !ft_strcmp(args[1]->value, "$?"))
 		return (printf("%d\n", ast->exec->exit_value), 0);
 	i = 0;

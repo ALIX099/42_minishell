@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/12 23:50:45 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/14 01:58:13 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 
 	argc = count_args(args);
 	(void)ast;
-	write(1, "exit\n", 5);
+	if (!ast->exec->is_child)
+		write(1, "exit\n", 5);
 	// if (argc == 1)
 	// free_and_exit(g_exit_status);
 	if (!is_num_arg(args[1]->value))
