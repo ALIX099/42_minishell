@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 00:28:19 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/15 02:04:51 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,7 @@ int	ft_pipeline(t_ast *ast)
 	if (pid_right == 0)
 		ft_single_right(ast->right, fds);
 	(close(fds[0]), close(fds[1]));
-	waitpid(pid_left, &status, 0);
-	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		return (kill(pid_right, SIGKILL), WEXITSTATUS(status));
+	waitpid(pid_left, NULL, 0);
 	waitpid(pid_right, &status, 0);
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
 		return (WEXITSTATUS(status));
