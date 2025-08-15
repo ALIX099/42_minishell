@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 17:04:46 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/11 15:03:26 by abouknan         ###   ########.fr       */
+/*   Created: 2025/08/04 05:50:01 by abouknan          #+#    #+#             */
+/*   Updated: 2025/08/11 19:32:10 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+#include "../headers/minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_pwd(t_expand_arg **args)
 {
-	while (*s1 && *s2 && *s1 == *s2)
+	char	buffer[4096];
+	char	*cwd;
+
+	if (count_args(args) > 1 && args[1]->value && args[1]->value[0] == '-')
+		return (write(2, "rsh: pwd: options are invalid\n", 30), 1);
+	cwd = getcwd(buffer, sizeof(buffer));
+	if (!cwd)
 	{
-		s1++;
-		s2++;
+		perror("rsh: pwd");
+		return (1);
 	}
-	return (*(unsigned char *)s1 - *(unsigned char *)s2);
+	write(1, cwd, ft_strlen(cwd));
+	write(1, "\n", 1);
+	return (0);
 }

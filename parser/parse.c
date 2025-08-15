@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:51:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/29 01:22:05 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/14 01:21:47 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,11 @@ void	print_ast(const char *direction, t_ast *ast, int depth)
     switch (ast->type)
     {
         case NODE_CMD:
-            printf("CMD: ");
+           printf("CMD: ");
             for (int i = 0; ast->argv && ast->argv[i]; i++)
                 printf("%s ", ast->argv[i]->value);
             printf("\n");
-            print_redirects(ast->redirects, depth + 1); // <-- Add this line
+            print_redirects(ast->redirects, depth + 1);// <-- Add this line
             break;
         case NODE_PIPE:
             printf("PIPE\n");
@@ -93,6 +93,6 @@ t_ast	*parse(char *line)
 		free(tokens);
 		return (NULL);
 	}
-	print_ast("root", ast, 0);
+	// print_ast("root", ast, 0);
 	return (ast);
 }

@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 17:04:46 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/11 15:03:26 by abouknan         ###   ########.fr       */
+/*   Created: 2025/08/05 18:22:47 by macbookpro        #+#    #+#             */
+/*   Updated: 2025/08/07 21:17:50 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+#include "../headers/minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_env(t_ast *ast)
 {
-	while (*s1 && *s2 && *s1 == *s2)
+	t_env	*tmp;
+
+	if (!ast || !ast->exec || !ast->exec->my_env)
+		return (0);
+	if (count_args(ast->argv) > 1)
+		return (write(2, "rsh: env: too many arguments\n", 29), 127);
+	tmp = ast->exec->my_env;
+	while (tmp)
 	{
-		s1++;
-		s2++;
+		if (tmp->value)
+			printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
 	}
-	return (*(unsigned char *)s1 - *(unsigned char *)s2);
+	return (0);
 }
