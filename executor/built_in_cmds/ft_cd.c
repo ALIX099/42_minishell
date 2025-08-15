@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:30 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/11 19:21:45 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/15 23:26:13 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	update_env_value(t_env *env_list, const char *key, const char *value)
 	{
 		while (tmp)
 		{
+			if (!value)
+				break;
 			if (!ft_strcmp(tmp->key, key))
 			{
 				if (tmp->value)

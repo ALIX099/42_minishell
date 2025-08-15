@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 23:52:22 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/15 15:55:25 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void				update_env_value(t_env *env_list, const char *key,
 int 				ft_redirections(t_ast *ast, t_redirect *r);
 int					execute_command(t_ast *ast);
 int					ft_pipeline(t_ast *ast);
+char 				*get_key(t_env *env, char *key);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 
