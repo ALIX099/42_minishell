@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:30 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 23:26:13 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/16 02:03:50 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_cd(t_ast *ast, t_expand_arg **args)
 	char	*home_path;
 
 	home_path = NULL;
-	if (!args[1]->value)
+	if (!args[1])
 		return (0);
 	if (count_args(args) > 2)
 		return (write(2, "rsh: cd: too many arguments\n", 28), 1);
