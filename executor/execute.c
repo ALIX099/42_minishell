@@ -6,7 +6,7 @@
 /*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/14 23:59:16 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/16 01:57:50 by macbookpro       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,24 @@ int	execute_command(t_ast *ast)
 
 // }
 
-// int	execute_and(t_ast *ast)
-// {
+int	execute_and_or(t_ast *ast)
+{
+	int value;
 
-// }
-
-// int	execute_or(t_ast *ast)
-// {
-
-// }
+	if (ast->type == NODE_AND)
+	{
+		value = execute(ast->left);
+		if (!value)
+			value = execute(ast->right);
+	}
+	else
+	{
+		value = execute(ast->left);
+		if (value)
+			value = execute(ast->right);
+	}
+	return (value);
+}
 
 int	execute(t_ast *ast)
 {
@@ -64,8 +73,8 @@ int	execute(t_ast *ast)
 	}
 	if (ast->type == NODE_PIPE)
 		return (ast->exec->exit_value = ft_pipeline(ast));
-	// if (ast->type == NODE_AND || ast->type == NODE_OR)
-	// 	return (execute_and(ast));
+	if (ast->type == NODE_AND || ast->type == NODE_OR)
+		return (ast->exec->exit_value = execute_and_or(ast));
 	// if (ast->type == NODE_SUBSHELL)
 	// 	return (execute_subshell(ast));
 	return (0); // Exit Status

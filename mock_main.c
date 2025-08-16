@@ -1,4 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mock_main.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/16 02:40:38 by macbookpro        #+#    #+#             */
+/*   Updated: 2025/08/16 16:36:37 by macbookpro       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+void    disable_ctrl_backslash_echo(void)
+{
+    struct termios term;
+
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+    term.c_lflag &= ~ECHOCTL;
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+void	sig_handler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		(void)signal;
+		write (1, "\n", 1);
+		// data->exit_value = 1;
+		rl_on_new_line();	
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
 void populate_exec_tree(t_ast **ast, t_exec *exec)
 {
@@ -12,9 +47,9 @@ void populate_exec_tree(t_ast **ast, t_exec *exec)
 int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 {
 	*line = readline("rsh> ");
-	if (!*line) // Ctrl+D
+	if (!*line)
 		return (0);
-	if (**line) // Only store non-empty commands
+	if (**line)
 		add_history(*line);
 	*cmds = parse(*line); // Output: Abstract Syntax Tree
 	if (*cmds)
@@ -30,6 +65,9 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	disable_ctrl_backslash_echo();
+	signal(SIGINT, sig_handler);
+    signal(SIGQUIT, SIG_IGN);
 	ft_memset(&(exec.is_child), 0, sizeof(int));
 	exec = init_env(envp);
 	while (ft_readline(&line, &cmds, &exec))
