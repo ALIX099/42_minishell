@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/15 15:55:25 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/16 15:36:52 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "minishell_parser.h"
 # include <signal.h>
+# include <unistd.h>
+# include <termios.h>
 
 # define RED "\033[1;31m"
 # define YELLOW "\033[1;33m"

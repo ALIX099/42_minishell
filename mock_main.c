@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   mock_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 02:40:38 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/16 16:36:37 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/16 15:41:08 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    disable_ctrl_backslash_echo(void)
-{
-    struct termios term;
-
-    if (tcgetattr(STDIN_FILENO, &term) == -1)
-        return;
-    term.c_lflag &= ~ECHOCTL;
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-}
+//void    disable_ctrl_backslash_echo(void)
+//{
+//    struct termios term;
+//
+//    if (tcgetattr(STDIN_FILENO, &term) == -1)
+//        return;
+//    term.c_lflag &= ~ECHONL;
+//    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+//}
 
 void	sig_handler(int signal)
 {
@@ -65,7 +65,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	disable_ctrl_backslash_echo();
+	//disable_ctrl_backslash_echo();
 	signal(SIGINT, sig_handler);
     signal(SIGQUIT, SIG_IGN);
 	ft_memset(&(exec.is_child), 0, sizeof(int));
