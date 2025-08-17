@@ -7,17 +7,20 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 02:40:38 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/17 01:06:04 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/17 04:01:27 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_exec *g_exec;
+
 void	sig_handler(int signal)
 {
-	if (signal == SIGINT)
+	if (signal == SIGINT && g_exec->wait_input)
 	{
 		(void)signal;
+		g_exec->exit_value = 130;
 		write (1, "\n", 1);
 		rl_on_new_line();	
 		rl_replace_line("", 0);
@@ -36,9 +39,16 @@ void populate_exec_tree(t_ast **ast, t_exec *exec)
 
 int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 {
+	exec->wait_input = 1;
+	if (exec->exit_value == 130)
+		write(1, "\n", 1);
 	*line = readline("rsh> ");
+	exec->wait_input = 0;
 	if (!*line)
+	{
+		write (1, "exit\n", 5);
 		return(0);
+	}
 	if (**line)
 		add_history(*line);
 	*cmds = parse(*line); // Output: Abstract Syntax Tree
@@ -58,7 +68,10 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGINT, sig_handler);
     signal(SIGQUIT, SIG_IGN);
 	ft_memset(&exec.is_child, 0, sizeof(int));
+	ft_memset(&exec.exit_value, 0, sizeof(int));
+	exec.wait_input = 1;
 	exec = init_env(envp);
+	g_exec = &exec;
 	while (ft_readline(&line, &cmds, &exec))
 	{
 		expand(cmds);

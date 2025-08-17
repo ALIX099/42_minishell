@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 10:00:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/11 21:36:58 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/17 03:32:11 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ static void	hard_coding_env(t_exec *exec)
 	add_back(&exec->my_env, env_new("PWD", buff));
 	add_back(&exec->my_env, env_new("SHLVL", "1"));
 	add_back(&exec->my_env, env_new("_", "/usr/bin/env"));
-	exec->empty_env = true;
 }
 
 t_exec	init_env(char **envp)
@@ -74,7 +73,6 @@ t_exec	init_env(char **envp)
 		return (exec);
 	}
 	exec.my_env = NULL;
-	exec.empty_env = false;
 	i = -1;
 	while (envp[++i])
 	{
