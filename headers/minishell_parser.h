@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/16 18:02:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/17 18:10:52 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,20 @@
 /*
 	EXPANSION
 */
+typedef enum e_segment_state
+{
+	LITERAL,
+	S_QUOTED,
+	D_QUOTED
+}	t_segment_state;
+
+typedef struct s_segment
+{
+	char				*seg_txt;
+	t_segment_state		state;
+	struct s_segment	*next;
+}	t_segment;
+
 typedef enum e_expand_state
 {
 	EXPAND,
@@ -40,6 +54,7 @@ typedef enum e_expand_state
 typedef struct e_expand_arg
 {
 	char				*value;
+	t_segment			*segments;
 	t_expand_state		expandable;
 }						t_expand_arg;
 
@@ -64,6 +79,7 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
+	t_segment			*segments;
 	t_expand_state		expandable;
 	struct s_token		*next;
 }						t_token;
