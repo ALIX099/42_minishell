@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 01:01:25 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/17 04:17:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	execute_command(t_ast *ast)
 {
-	if (!ast->argv[0]->value)
+	if (!ast->argv[0]->value[0])
 		return(command_not_found(""), 127);
 	if (!ft_strcmp(ast->argv[0]->value, "env"))
 		return (ast->exec->exit_value = ft_env(ast));
