@@ -6,25 +6,25 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/14 01:58:13 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/17 01:06:56 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	free_env_list(t_env *env)
-{
-	t_env	*tmp;
+// static void	free_env_list(t_env *env)
+// {
+// 	t_env	*tmp;
 
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
-	}
-}
+// 	while (env)
+// 	{
+// 		tmp = env;
+// 		env = env->next;
+// 		free(tmp->key);
+// 		free(tmp->value);
+// 		free(tmp);
+// 	}
+// }
 
 static int	is_num_arg(char *str)
 {
@@ -50,12 +50,15 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 	(void)ast;
 	if (!ast->exec->is_child)
 		write(1, "exit\n", 5);
-	// if (argc == 1)
-	// free_and_exit(g_exit_status);
+	if (argc == 1)
+	{
+		// free_all();
+		exit(ast->exec->exit_value);
+	}
 	if (!is_num_arg(args[1]->value))
 	{
 		write(2, "rsh: exit: numeric argument required\n", 37);
-		free_env_list(ast->exec->my_env);
+		// free_all();
 		exit(255);
 	}
 	if (argc > 2)
@@ -63,7 +66,7 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 		write(2, "rsh: exit: too many arguments\n", 30);
 		return (1);
 	}
-	free_env_list(ast->exec->my_env);
+	// free_all();
 	exit((unsigned char)ft_atoi(args[1]->value));
 	return (0);
 }
