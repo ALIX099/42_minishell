@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/16 15:36:52 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/17 04:13:22 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,13 @@ typedef struct s_env
 
 typedef struct s_exec
 {
-	t_env *my_env; // freed all linked list
-	char **env;    // need to be freed after
-	bool			empty_env;
+	t_env 			*my_env;
+	char 			**env;
 	int				exit_value;
 	int				is_child;
 	char			*key;
 	char			*value;
-	int				cmd_count;
+	int				wait_input;
 }					t_exec;
 
 void				expand(t_ast *ast);
@@ -70,7 +69,6 @@ void				update_env_value(t_env *env_list, const char *key,
 int 				ft_redirections(t_ast *ast, t_redirect *r);
 int					execute_command(t_ast *ast);
 int					ft_pipeline(t_ast *ast);
-char 				*get_key(t_env *env, char *key);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipeline.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 02:04:51 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/17 04:04:06 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void	ft_single_left(t_ast *left, int fds[2])
 		perror("dup2");
 		exit(1);
 	}
+	left->exec->is_child = 1;
 	exit_status = execute(left);
 	close(fds[1]);
 	// free_all();
