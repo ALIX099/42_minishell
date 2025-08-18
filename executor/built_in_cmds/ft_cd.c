@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:30 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/16 02:03:50 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/18 09:58:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,11 @@ int	ft_cd(t_ast *ast, t_expand_arg **args)
 	char	*home_path;
 
 	home_path = NULL;
-	if (!args[1])
-		return (0);
 	if (count_args(args) > 2)
 		return (write(2, "rsh: cd: too many arguments\n", 28), 1);
 	if (!args[1] || !args[1]->value || args[1]->value[0] == '\0')
 	{
-		home_path = getenv("HOME");
+		home_path = get_env_value(ast->exec->my_env, "HOME");
 		if (!home_path)
 			return (write(2, "rsh: cd: HOME not set\n", 23), 1);
 	}
@@ -61,7 +59,7 @@ void	update_env_value(t_env *env_list, const char *key, const char *value)
 		while (tmp)
 		{
 			if (!value)
-				break;
+				break ;
 			if (!ft_strcmp(tmp->key, key))
 			{
 				if (tmp->value)

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 04:17:55 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/18 14:08:31 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	execute_command(t_ast *ast)
 {
 	if (!ast->argv[0]->value[0])
-		return(command_not_found(""), 127);
+		return (command_not_found(""), 127);
 	if (!ft_strcmp(ast->argv[0]->value, "env"))
 		return (ast->exec->exit_value = ft_env(ast));
 	else if (!ft_strcmp(ast->argv[0]->value, "unset"))
@@ -36,11 +36,10 @@ int	execute_command(t_ast *ast)
 	return (0);
 }
 
-
 int	execute_subshell(t_ast *ast)
 {
-	int status;
-	pid_t pid;
+	pid_t	pid;
+	int value;
 
 	if (!ast)
 		return (0);
@@ -49,21 +48,18 @@ int	execute_subshell(t_ast *ast)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
-		int value;
-
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		value = execute(ast->left);
 		// free_list();
 		exit(value);
 	}
-	pid = waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return(WEXITSTATUS(status));
-	return(0);
+	return (handle_child_status(pid));
 }
 
 int	execute_and_or(t_ast *ast)
 {
-	int value;
+	int	value;
 
 	if (ast->type == NODE_AND)
 	{
@@ -99,4 +95,16 @@ int	execute(t_ast *ast)
 	if (ast->type == NODE_SUBSHELL)
 		return (ast->exec->exit_value = execute_subshell(ast));
 	return (0); // Exit Status
+}
+
+int handle_child_status(pid_t pid)
+{
+    int status;
+
+    waitpid(pid, &status, 0);
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+        write(1, "Quit (core dumped)\n", 19);
+    if (WIFSIGNALED(status))
+        return (128 + WTERMSIG(status));
+    return (WEXITSTATUS(status));
 }

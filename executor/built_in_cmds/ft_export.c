@@ -70,12 +70,11 @@ static void	export_args(t_expand_arg **args, t_exec *data)
 	while (args[++i] != 0 && args[i]->value)
 	{
 		if (!valid_export(args[i]->value))
-			continue;
+			continue ;
 		sign = ft_strchr(args[i]->value, '=');
 		if (sign)
 		{
-			data->key = ft_substr(args[i]->value, 0, sign
-					- args[i]->value);
+			data->key = ft_substr(args[i]->value, 0, sign - args[i]->value);
 			data->value = ft_strdup(sign + 1);
 		}
 		else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec_external.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/16 02:18:50 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/18 13:44:50 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static char	*find_path(t_ast *ast)
 	char	*full_path;
 	int		i;
 
-	if (ast->argv[0]->value[0] == '/' || ast->argv[0]->value[0] == '.')
+	if (ast->argv[0]->value[0] == '/' || ast->argv[0]->value[0] == '.'
+		|| ast->argv[0]->value[ft_strlen(ast->argv[0]->value) - 1] == '/')
 		return (ft_strdup(ast->argv[0]->value));
 	path_env = get_env_value(ast->exec->my_env, "PATH");
 	if (!path_env)
@@ -67,8 +68,6 @@ int	ft_external_cmds(t_ast *ast)
 	char	*path;
 	int		status;
 
-	if (ast->argv[0]->value && !ast->argv[0]->value[0])
-		return (0);
 	path = find_path(ast);
 	if (!path)
 		return (command_not_found(ast->argv[0]->value), 127);
@@ -80,11 +79,7 @@ int	ft_external_cmds(t_ast *ast)
 	if (pid == -1)
 		return (perror("fork"), 1);
 	if (pid == 0)
-		return (execve(path, args, ast->exec->env), exit(126), 126);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	else if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (1);
+		return (signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL), execve(path,
+				args, ast->exec->env), exit(126), 126);
+	return (handle_child_status(pid));
 }
