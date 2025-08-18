@@ -21,7 +21,7 @@ void	sig_handler(int signal)
 	{
 		(void)signal;
 		g_exec->exit_value = 130;
-		write (0, "\n", 1);
+		write (1, "\n", 1);
 		rl_on_new_line();	
 		rl_replace_line("", 0);
 		rl_redisplay();
