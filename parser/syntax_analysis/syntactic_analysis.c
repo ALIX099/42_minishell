@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 01:09:03 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:12:01 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,7 @@ t_ast *parse_command(t_token **tokens)
         {
             node->argv[argc] = malloc(sizeof(t_expand_arg)); 
             node->argv[argc]->value = ft_strdup((*tokens)->value);
-            node->argv[argc]->segments = (*tokens)->segments;
-            node->argv[argc++]->expandable = (*tokens)->expandable;
+            node->argv[argc++]->segments = (*tokens)->segments;
             *tokens = (*tokens)->next;
         }
         else
@@ -108,7 +107,6 @@ t_ast *parse_command(t_token **tokens)
             redir->file = malloc(sizeof(t_expand_arg));
             redir->file->value = ft_strdup((*tokens)->value);
             redir->file->segments = (*tokens)->segments;
-            redir->file->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
             redir->next = node->redirects;
             node->redirects = redir;

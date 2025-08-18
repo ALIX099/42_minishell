@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 22:40:06 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:10:41 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,10 @@ static t_segment *create_segment(char *text, t_segment_state type)
     
     segment->seg_txt = text;
     segment->state = type;
+    if (type == S_QUOTED)
+        segment->expandable = NO_EXPAND;
+    else
+        segment->expandable = EXPAND;
     segment->next = NULL;
     return segment;
 }
@@ -190,7 +194,6 @@ static void str_to_tokens(t_token **tokens, char *s)
         return;
         
     ft_tokenlist_add_back(tokens, &new_token);
-    new_token->expandable = EXPAND;
     
     while (s[i] && ft_isspace(s[i]))
         i++;
