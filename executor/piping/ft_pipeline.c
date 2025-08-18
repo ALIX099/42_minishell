@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/17 04:04:06 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/18 14:08:35 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	ft_single_left(t_ast *left, int fds[2])
 {
 	int	exit_status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(fds[0]);
 	if (dup2(fds[1], STDOUT_FILENO) < 0)
 	{
@@ -33,6 +35,8 @@ static void	ft_single_right(t_ast *right, int fds[2])
 {
 	int	exit_status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(fds[1]);
 	if (dup2(fds[0], STDIN_FILENO) < 0)
 	{
@@ -66,9 +70,8 @@ int	ft_pipeline(t_ast *ast)
 	if (pid_right == 0)
 		ft_single_right(ast->right, fds);
 	(close(fds[0]), close(fds[1]));
-	waitpid(pid_left, NULL, 0);
-	waitpid(pid_right, &status, 0);
-	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		return (WEXITSTATUS(status));
-	return (0);
+	waitpid(pid_left, &status, 0);
+	if (WIFSIGNALED(status))
+		return (waitpid(pid_right, NULL, 0),128 + WTERMSIG(status));
+	return (handle_child_status(pid_right));
 }
