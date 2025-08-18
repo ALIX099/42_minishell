@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/18 14:27:04 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/18 14:27:55 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	ft_single_right(t_ast *right, int fds[2])
 
 int	ft_pipeline(t_ast *ast)
 {
-	int		status;
 	int		fds[2];
 	pid_t	pid_left;
 	pid_t	pid_right;
