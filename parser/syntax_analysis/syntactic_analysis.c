@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 17:57:18 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 01:09:03 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,28 @@ static t_redirect_type  get_redirect_type(t_token_type tok_type)
     if (tok_type == IS_REDIRECT_HEREDOC)
         return REDIRECT_HEREDOC;
     return (-1);
+}
+
+size_t  count_tok_args(t_token *tokens)
+{
+    size_t  ret;
+    t_token *tmp;
+
+    ret = 0;
+    tmp = tokens;
+    while (tmp && (tmp->type == IS_WORD ||
+        tmp->type == IS_REDIRECT_IN ||
+        tmp->type == IS_REDIRECT_OUT ||
+        tmp->type == IS_REDIRECT_APPEND ||
+        tmp->type == IS_REDIRECT_HEREDOC))
+    {
+        if (tmp->type == IS_WORD)
+            ++ret;
+        else if (tmp->next)
+            tmp = tmp->next;
+        tmp = tmp->next;
+    }
+    return (ret);
 }
 
 t_ast *parse_command(t_token **tokens)
@@ -57,8 +79,8 @@ t_ast *parse_command(t_token **tokens)
 
     t_ast *node = malloc(sizeof(t_ast));
     node->type = NODE_CMD;
-    node->argv = malloc(sizeof(t_expand_arg *) * 256);//256 to be replaced with a dynamic args counter
-    int argc = 0;
+    node->argv = malloc(sizeof(t_expand_arg *) * count_tok_args(*tokens) + 1);//dynamic args counter
+    size_t  argc = 0;
     node->redirects = NULL;
     while (*tokens && ((*tokens)->type == IS_WORD ||
                        (*tokens)->type == IS_REDIRECT_IN ||
@@ -70,6 +92,7 @@ t_ast *parse_command(t_token **tokens)
         {
             node->argv[argc] = malloc(sizeof(t_expand_arg)); 
             node->argv[argc]->value = ft_strdup((*tokens)->value);
+            node->argv[argc]->segments = (*tokens)->segments;
             node->argv[argc++]->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
         }
@@ -84,6 +107,7 @@ t_ast *parse_command(t_token **tokens)
             }
             redir->file = malloc(sizeof(t_expand_arg));
             redir->file->value = ft_strdup((*tokens)->value);
+            redir->file->segments = (*tokens)->segments;
             redir->file->expandable = (*tokens)->expandable;
             *tokens = (*tokens)->next;
             redir->next = node->redirects;

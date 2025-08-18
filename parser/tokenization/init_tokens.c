@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 21:21:46 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/17 22:40:06 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ static int	is_special_char(const char *s, int c)
 	return (0);
 }
 
-static void	set_token(t_token *new_token, char *s, int start, int i)
-{
-	new_token->value = ft_strndup(s + start, i - start);
-	new_token->type = get_token_type(new_token->value);
-}
+//static void	set_token(t_token *new_token, char *s, int start, int i)
+//{
+//	new_token->value = ft_strndup(s + start, i - start);
+//	new_token->type = get_token_type(new_token->value);
+//}
 
 //static char	*append_line(char *dst, char *src)
 //{
@@ -120,44 +120,146 @@ static int	read_until_quote(char **s, int i, char quote, char **out)
     return i + 1;
 }
 
-static void	str_to_tokens(t_token **tokens, char *s)
+static int process_token_segments(t_token *token, char *s, int i)
 {
-    t_token	*new_token;
-    int		i = 0, start;
+    int start = i;
+    token->segments = NULL;
+    
+    while (s[i] && !ft_isspace(s[i]) && !is_special_char("()<>|&", s[i]))
+    {
+        if (s[i] == '\'' || s[i] == '"')
+        {
+            // Handle quoted part
+            char quote = s[i];
+            char *quoted_content;
+            int next_pos = read_until_quote(&s, i, quote, &quoted_content);
+            
+            if (next_pos < 0)
+                return -1;
+                
+            // Add quoted segment
+            t_segment_state seg_type = (quote == '\'') ? S_QUOTED : D_QUOTED;
+            add_segment(&token->segments, create_segment(quoted_content, seg_type));
+            
+            // If single-quoted, mark as not expandable
+            if (quote == '\'')
+                token->expandable = NO_EXPAND;
+                
+            i = next_pos;
+        }
+        else
+        {
+            // Handle unquoted part
+            int plain_start = i;
+            
+            // Read until quote or space or special char
+            while (s[i] && !ft_isspace(s[i]) && !is_special_char("()<>|&", s[i]) && 
+                   s[i] != '\'' && s[i] != '"')
+                i++;
+                
+            char *plain_text = ft_strndup(s + plain_start, i - plain_start);
+            add_segment(&token->segments, create_segment(plain_text, LITERAL));
+        }
+    }
+    
+    // Rebuild full token value from segments
+    token->value = ft_strdup("");
+    t_segment *seg = token->segments;
+    while (seg)
+    {
+        char *temp = token->value;
+        token->value = ft_strjoin(token->value, seg->seg_txt);
+        free(temp);
+        seg = seg->next;
+    }
+    
+    token->type = get_token_type(token->value);
+    return i - start;
+}
+
+static void str_to_tokens(t_token **tokens, char *s)
+{
+    t_token *new_token;
+    int     i = 0, start;
 
     if (!s || !*s)
         return;
+        
     new_token = malloc(sizeof(t_token));
+    if (!new_token)
+        return;
+        
     ft_tokenlist_add_back(tokens, &new_token);
-	new_token->expandable = EXPAND;
+    new_token->expandable = EXPAND;
+    
     while (s[i] && ft_isspace(s[i]))
         i++;
     start = i;
-    if (s[i] == '\'' || s[i] == '"') {
-		if (s[i] == '\'')
-			new_token->expandable = NO_EXPAND;
-        int next = read_until_quote(&s, i, s[i], &new_token->value);
-        if (next < 0)
-        {
-            //ToDo:free_list(tokens);
-			*tokens = NULL;
-            return ;
-        }
-        new_token->type = IS_WORD;
-        str_to_tokens(tokens, s + next);
-        return;
-    }
-    while (s[i] && !is_special_char("()<>|&", s[i]) && !ft_isspace(s[i]) && s[i] != '\'' && s[i] != '"')
-        i++;
-    if (i > start)
-        set_token(new_token, s, start, i);
-    else if (s[i] && is_special_char("()<>|&", s[i]))
+    
+    if (is_special_char("()<>|&", s[i]))
     {
+        // Handle special token
         new_token->value = extract_token(s + i, &i);
         new_token->type = get_token_type(new_token->value);
+        
+        // Create a single segment for special token
+        add_segment(&new_token->segments, 
+                   create_segment(ft_strdup(new_token->value), LITERAL));
     }
+    else
+    {
+        // Process regular word token with potential mixed quotes
+        int result = process_token_segments(new_token, s, start);
+        if (result < 0)
+        {
+            *tokens = NULL; // Error occurred
+            return;
+        }
+        i = start + result;
+    }
+    
     str_to_tokens(tokens, s + i);
 }
+
+//
+//static void	str_to_tokens(t_token **tokens, char *s)
+//{
+//    t_token	*new_token;
+//    int		i = 0, start;
+//
+//    if (!s || !*s)
+//        return;
+//    new_token = malloc(sizeof(t_token));
+//    ft_tokenlist_add_back(tokens, &new_token);
+//	new_token->expandable = EXPAND;
+//    while (s[i] && ft_isspace(s[i]))
+//        i++;
+//    start = i;
+//    if (s[i] == '\'' || s[i] == '"') {
+//		if (s[i] == '\'')
+//			new_token->expandable = NO_EXPAND;
+//        int next = read_until_quote(&s, i, s[i], &new_token->value);
+//        if (next < 0)
+//        {
+//            //ToDo:free_list(tokens);
+//			*tokens = NULL;
+//            return ;
+//        }
+//        new_token->type = IS_WORD;
+//        str_to_tokens(tokens, s + next);
+//        return;
+//    }
+//    while (s[i] && !is_special_char("()<>|&", s[i]) && !ft_isspace(s[i]) && s[i] != '\'' && s[i] != '"')
+//        i++;
+//    if (i > start)
+//        set_token(new_token, s, start, i);
+//    else if (s[i] && is_special_char("()<>|&", s[i]))
+//    {
+//        new_token->value = extract_token(s + i, &i);
+//        new_token->type = get_token_type(new_token->value);
+//    }
+//    str_to_tokens(tokens, s + i);
+//}
 
 void	init_tokens(t_token **tokens, char *str)
 {

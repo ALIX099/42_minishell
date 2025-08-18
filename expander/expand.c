@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <ikarouat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/07/29 04:47:59 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 01:18:09 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	expand_redir_list(t_redirect **redirections)
 	return ;
 }
 
-void	expand(t_ast *ast)
+void	expand(t_ast *ast)//Checkpoint: To Be modified
 {
 	int	i;
 

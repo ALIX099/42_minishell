@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 18:10:52 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 01:15:57 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdbool.h>
 # include <stdlib.h>
 # include <string.h>
+# include <stddef.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
