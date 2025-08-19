@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 23:37:12 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/19 13:43:00 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char *expand_variables_in_str(char *str)
     return result;
 }
 
-void	expand_node(char **arg, t_segment **segments)
+void	expand_node(char **arg, t_segment *segments)
 {
 	char *result;
     t_segment *current;
