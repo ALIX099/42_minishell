@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 20:56:05 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 23:34:04 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,17 +229,6 @@ char    *expand_variables_in_str(char *str, t_exec *data)
     return result;
 }
 
-void    expand_heredoc(t_heredoc *heredoc, t_exec *data)
-{
-    char    *expanded;
-
-    if (!heredoc->raw_body || heredoc->quoted)
-        return ;
-    expanded = expand_variables_in_str(heredoc->raw_body, data);
-    free(heredoc->raw_body);
-    heredoc->raw_body = expanded;
-}
-
 void    expand_node(char **arg, t_segment *segments, t_exec *data)
 {
 	char        *result;
@@ -293,8 +282,6 @@ void	expand_redir_list(t_redirect **redirections, t_exec *data)
 	{
 		if (tmp->type != REDIRECT_HEREDOC)
 			expand_node(&(tmp->file->value), tmp->file->segments, data);
-        else if (tmp->type == REDIRECT_HEREDOC && !(tmp->heredoc->quoted))
-            expand_heredoc(tmp->heredoc, data);
 		tmp = tmp->next;
 	}
 	return ;

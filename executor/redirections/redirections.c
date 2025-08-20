@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/20 22:02:16 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 23:37:17 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	ft_redirections(t_ast *ast, t_redirect *r)
 {
 	pid_t	pid;
 
-	prepare_heredoc(r);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
@@ -86,7 +85,7 @@ int	ft_redirections(t_ast *ast, t_redirect *r)
 			else if (r->type == REDIRECT_IN)
 				r_in(r);
 			else if (r->type == REDIRECT_HEREDOC)
-				r_heredoc(r);
+				(prepare_heredoc(r, ast->exec), r_heredoc(r));
 			r = r->next;
 		}
 		exit(execute_command(ast));

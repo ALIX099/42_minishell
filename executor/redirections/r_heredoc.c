@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 23:15:56 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/20 23:17:25 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 23:48:31 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	ft_do_while(char **line, char **content, t_redirect *r)
 
 	*line = readline("> ");
 	if (!*line)
-		return (free(*content), 2);
+		return (write(1, *content, ft_strlen(*content)), free(*content), 2);
 	if (!ft_strcmp(*line, r->heredoc->delimeter))
 		return (free(*line), 1);
 	tmp = *content;
@@ -48,13 +48,24 @@ static int	ft_do_while(char **line, char **content, t_redirect *r)
 	return (0);
 }
 
-int	prepare_heredoc(t_redirect *r)
+void	expand_heredoc(t_heredoc *heredoc, t_exec *data)
+{
+	char	*expanded;
+
+	if (!heredoc->raw_body || heredoc->quoted)
+		return ;
+	expanded = expand_variables_in_str(heredoc->raw_body, data);
+	free(heredoc->raw_body);
+	heredoc->raw_body = expanded;
+}
+
+int	prepare_heredoc(t_redirect *r, t_exec *data)
 {
 	char	*line;
 	char	*content;
 	int		status;
 
-	signal(SIGINT, SIG_DFL);
+	(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_IGN));
 	while (r)
 	{
 		if (r->type == REDIRECT_HEREDOC)
@@ -63,12 +74,14 @@ int	prepare_heredoc(t_redirect *r)
 			while (1)
 			{
 				status = ft_do_while(&line, &content, r);
-				if (status == 1) // delimiter
+				if (status == 1)
 					break ;
-				if (status == 2) // EOF or Ctrl+D
+				if (status == 2)
 					return (1);
 			}
 			r->heredoc->raw_body = content;
+			if (r->type == REDIRECT_HEREDOC && !r->heredoc->quoted)
+				expand_heredoc(r->heredoc, data);
 		}
 		r = r->next;
 	}
