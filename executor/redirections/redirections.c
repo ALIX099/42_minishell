@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 01:21:28 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/20 17:38:25 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ int	ft_redirections(t_ast *ast, t_redirect *r)
 			ast->exec->exit_value = r_in(ast, r);
 		else if (tmp->type == REDIRECT_APPEND)
 			ast->exec->exit_value = r_append(ast, r);
-		// else if (tmp->type == REDIRECT_HEREDOC)
-		//     ast->exec->exit_value = r_herdoc(ast, r);
+		else if (tmp->type == REDIRECT_HEREDOC)
+		    ast->exec->exit_value = r_heredoc(ast, r);
 		tmp = tmp->next;
 	}
 	return (ast->exec->exit_value);
