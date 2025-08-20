@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 02:42:23 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 06:27:40 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,10 @@ typedef struct s_token
 	t_expand_state		expandable;
 	struct s_token		*next;
 }						t_token;
-void					init_tokens(t_token **tokens, char *s);
-void					ft_tokenlist_add_back(t_token **token_list,
-							t_token **new_token);
-char					*extract_token(char *s, int *i_ptr);
-t_token					*tokenize(char **line);
+void	init_tokens(t_token **tokens, char *s);
+void	ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
+char	*extract_token(char *s, int *i_ptr);
+t_token	*tokenize(char **line);
 /*
 REDIRECTIONS
 */
@@ -109,6 +108,7 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }						t_redirect;
 
+void	ft_redirlist_add_back(t_redirect **redirs, t_redirect **new_redir);
 /*
 	SYNTAX ANALYSIS
 */

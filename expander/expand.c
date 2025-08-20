@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 03:06:42 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 05:36:08 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,10 @@ void    expand_node(char **arg, t_segment *segments)
         }
         else if (current->state == D_QUOTED)
         {
-            expanded_segment = expand_variables_in_str(current->seg_txt);
+            if (!current->seg_txt)
+                expanded_segment = ft_strdup(current->seg_txt);
+            else
+                expanded_segment = expand_variables_in_str(current->seg_txt);
         }
         else
         {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 22:12:01 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 06:27:14 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,8 @@ t_ast *parse_command(t_token **tokens)
             redir->file = malloc(sizeof(t_expand_arg));
             redir->file->value = ft_strdup((*tokens)->value);
             redir->file->segments = (*tokens)->segments;
+            ft_redirlist_add_back(&node->redirects, &redir);
             *tokens = (*tokens)->next;
-            redir->next = node->redirects;
-            node->redirects = redir;
         }
     }
     node->argv[argc] = NULL;
