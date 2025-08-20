@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 22:05:07 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 02:42:23 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <dirent.h>
 # include <signal.h>
 # include <stdlib.h>
 # include <string.h>

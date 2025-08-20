@@ -6,13 +6,88 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/19 13:43:00 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 03:06:42 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *expand_variables_in_str(char *str)
+static int  match_pattern(char *pattern, const char *filename)
+{
+    char *star = ft_strchr(pattern, '*');
+    
+    if (!star) {
+        // No wildcards, do exact match
+        return ft_strcmp(pattern, filename) == 0;
+    }
+    
+    // Check if beginning matches (before first star)
+    size_t prefix_len = star - pattern;
+    if (prefix_len > 0 && ft_strncmp(pattern, filename, prefix_len) != 0)
+        return 0;
+    
+    // Move past the star
+    pattern = star + 1;
+    
+    // If pattern ends with *, it matches anything after the prefix
+    if (*pattern == '\0')
+        return 1;
+    
+    // For simplicity, we'll only handle patterns with a single '*'
+    // A more complete solution would handle multiple '*' characters
+    
+    // Check if the filename ends with the pattern after the '*'
+    size_t filename_len = ft_strlen(filename);
+    size_t suffix_len = ft_strlen(pattern);
+    
+    if (suffix_len > filename_len)
+        return 0;
+    
+    return ft_strcmp(pattern, filename + (filename_len - suffix_len)) == 0;
+}
+
+char    *expand_wildcard(char *str)
+{
+    DIR             *dir;
+    struct dirent   *entry;
+    char            *result;
+    int             matches;
+    
+    if (!ft_strchr(str, '*'))
+        return (str);
+    dir = opendir(".");
+    if (!dir)
+        return ft_strdup(str);
+    result = ft_strdup("");
+    matches = 0;
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (entry->d_name[0] == '.')
+            continue;
+        
+        // Check if this file matches our pattern
+        if (match_pattern(str, entry->d_name)) {
+            // Add space between multiple matches
+            if (matches > 0) {
+                char *temp = result;
+                result = ft_strjoin(result, " ");
+                free(temp);
+            }
+            
+            // Add the matching filename to result
+            char *temp = result;
+            result = ft_strjoin(result, entry->d_name);
+            free(temp);
+            matches++;
+        }
+    }
+    closedir(dir);
+    if (matches == 0)
+        return (free(result), ft_strdup(str));
+    return (result);
+}
+
+char    *expand_variables_in_str(char *str)
 {
     char *result = ft_strdup(str);
     char *dollar;
@@ -52,11 +127,12 @@ char *expand_variables_in_str(char *str)
     return result;
 }
 
-void	expand_node(char **arg, t_segment *segments)
+void    expand_node(char **arg, t_segment *segments)
 {
-	char *result;
-    t_segment *current;
-    char *expanded_segment;
+	char        *result;
+    char        *expanded_segment;
+    char        *env_expand_segment;
+    t_segment   *current;
     
     if (!*arg || !segments)
         return;
@@ -74,15 +150,13 @@ void	expand_node(char **arg, t_segment *segments)
         }
         else if (current->state == D_QUOTED)
         {
-            // Double quotes - expand variables but not wildcards
             expanded_segment = expand_variables_in_str(current->seg_txt);
         }
-        else // LITERAL
+        else
         {
-            // Unquoted - expand everything
-            expanded_segment = expand_variables_in_str(current->seg_txt);
+            env_expand_segment = expand_variables_in_str(current->seg_txt);
+            expanded_segment = expand_wildcard(env_expand_segment);
         }
-        
         // Append expanded segment to result
         char *temp = result;
         result = ft_strjoin(result, expanded_segment);

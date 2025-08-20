@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 22:10:41 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/19 17:29:19 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,12 @@ static int process_token_segments(t_token *token, char *s, int i)
 {
     int start = i;
     token->segments = NULL;
+    token->expandable = EXPAND; // Default to expandable
     
-    while (s[i] && !ft_isspace(s[i]) && !is_special_char("()<>|&", s[i]))
+    while (s[i] && !ft_isspace(s[i]) && 
+           // Only check for special chars if NOT inside quotes
+           (!is_special_char("()<>|&", s[i]) || 
+            s[start] == '\'' || s[start] == '"'))
     {
         if (s[i] == '\'' || s[i] == '"')
         {
@@ -156,14 +160,20 @@ static int process_token_segments(t_token *token, char *s, int i)
             // Handle unquoted part
             int plain_start = i;
             
-            // Read until quote or space or special char
-            while (s[i] && !ft_isspace(s[i]) && !is_special_char("()<>|&", s[i]) && 
-                   s[i] != '\'' && s[i] != '"')
+            // Read until quote or space or special char (if not already in a quoted token)
+            while (s[i] && !ft_isspace(s[i]) && 
+                  ((!is_special_char("()<>|&", s[i]) || s[start] == '\'' || s[start] == '"')) && 
+                  s[i] != '\'' && s[i] != '"')
                 i++;
                 
             char *plain_text = ft_strndup(s + plain_start, i - plain_start);
             add_segment(&token->segments, create_segment(plain_text, LITERAL));
         }
+        
+        // Break if we hit a special char and this isn't a quoted token
+        if (s[i] && is_special_char("()<>|&", s[i]) && 
+           s[start] != '\'' && s[start] != '"')
+            break;
     }
     
     // Rebuild full token value from segments
@@ -177,7 +187,7 @@ static int process_token_segments(t_token *token, char *s, int i)
         seg = seg->next;
     }
     
-    token->type = get_token_type(token->value);
+    token->type = IS_WORD; // Force to WORD type for quoted special chars
     return i - start;
 }
 
@@ -199,13 +209,27 @@ static void str_to_tokens(t_token **tokens, char *s)
         i++;
     start = i;
     
-    if (is_special_char("()<>|&", s[i]))
+    // Check if token starts with a quote
+    if (s[i] == '\'' || s[i] == '"')
+    {
+        // Process a token that starts with quotes (may contain special chars)
+        int result = process_token_segments(new_token, s, start);
+        if (result < 0)
+        {
+            *tokens = NULL; // Error occurred
+            return;
+        }
+        i = start + result;
+    }
+    // Check if it's an unquoted special character
+    else if (is_special_char("()<>|&", s[i]))
     {
         // Handle special token
         new_token->value = extract_token(s + i, &i);
         new_token->type = get_token_type(new_token->value);
         
         // Create a single segment for special token
+        new_token->segments = NULL;
         add_segment(&new_token->segments, 
                    create_segment(ft_strdup(new_token->value), LITERAL));
     }
