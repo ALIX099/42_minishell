@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/16 18:02:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:05:07 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdbool.h>
 # include <stdlib.h>
 # include <string.h>
+# include <stddef.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -31,16 +31,32 @@
 /*
 	EXPANSION
 */
+typedef enum e_segment_state
+{
+	LITERAL,
+	S_QUOTED,
+	D_QUOTED
+}						t_segment_state;
+
 typedef enum e_expand_state
 {
 	EXPAND,
 	NO_EXPAND
 }						t_expand_state;
 
+
+typedef struct s_segment
+{
+	char				*seg_txt;
+	t_segment_state		state;
+	t_expand_state		expandable;
+	struct s_segment	*next;
+}						t_segment;
+
 typedef struct e_expand_arg
 {
 	char				*value;
-	t_expand_state		expandable;
+	t_segment			*segments;
 }						t_expand_arg;
 
 /*
@@ -64,6 +80,7 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
+	t_segment			*segments;
 	t_expand_state		expandable;
 	struct s_token		*next;
 }						t_token;
