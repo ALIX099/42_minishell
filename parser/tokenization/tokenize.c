@@ -3,45 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/17 22:42:18 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 05:19:37 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-static char *token_type_to_str(t_token_type type)
-{
-    switch (type) {
-        case IS_WORD: return "WORD";
-        case IS_PIPE: return "PIPE";
-        case IS_REDIRECT_IN: return "REDIR_IN";
-        case IS_REDIRECT_OUT: return "REDIR_OUT";
-        case IS_REDIRECT_APPEND: return "REDIR_APPEND";
-        case IS_REDIRECT_HEREDOC: return "HEREDOC";
-        case IS_AND: return "AND";
-        case IS_OR: return "OR";
-        case IS_OPEN_BRACKET: return "OPEN_BRACKET";
-        case IS_CLOSE_BRACKET: return "CLOSE_BRACKET";
-        default: return "UNKNOWN";
-    }
-}
-
-// Convert segment state to string for debugging
-static char *segment_state_to_str(t_segment_state state)
-{
-    switch (state) {
-        case LITERAL: return "LITERAL";
-        case S_QUOTED: return "S_QUOTED";
-        case D_QUOTED: return "D_QUOTED";
-        default: return "UNKNOWN";
-    }
-}
+//static char *token_type_to_str(t_token_type type)
+//{
+//    switch (type) {
+//        case IS_WORD: return "WORD";
+//        case IS_PIPE: return "PIPE";
+//        case IS_REDIRECT_IN: return "REDIR_IN";
+//        case IS_REDIRECT_OUT: return "REDIR_OUT";
+//        case IS_REDIRECT_APPEND: return "REDIR_APPEND";
+//        case IS_REDIRECT_HEREDOC: return "HEREDOC";
+//        case IS_AND: return "AND";
+//        case IS_OR: return "OR";
+//        case IS_OPEN_BRACKET: return "OPEN_BRACKET";
+//        case IS_CLOSE_BRACKET: return "CLOSE_BRACKET";
+//        default: return "UNKNOWN";
+//    }
+//}
+//
+//// Convert segment state to string for debugging
+//static char *segment_state_to_str(t_segment_state state)
+//{
+//    switch (state) {
+//        case LITERAL: return "LITERAL";
+//        case S_QUOTED: return "S_QUOTED";
+//        case D_QUOTED: return "D_QUOTED";
+//        default: return "UNKNOWN";
+//    }
+//}
 
 // Print a visual representation of tokens and their segments
-static void print_tokens(t_token *tokens)
+/*static void print_tokens(t_token *tokens)
 {
     int token_count = 0;
     
@@ -76,7 +76,7 @@ static void print_tokens(t_token *tokens)
     
     printf("\nTotal tokens: %d\n", token_count);
     printf("=================\n\n");
-}
+}*/
 
 t_token	*tokenize(char **line)
 {
@@ -88,6 +88,6 @@ t_token	*tokenize(char **line)
 	free(*line);
 	line = &trimmed_line;
 	init_tokens(&tokens, *line);
-	print_tokens(tokens);
+	//print_tokens(tokens);
 	return (tokens);
 }

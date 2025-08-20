@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 01:21:28 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/20 05:13:35 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static int	r_out(t_ast *ast, t_redirect *r)
 {
 	pid_t	pid;
-	int		status;
 	int		fd;
 
 	pid = fork();
@@ -23,6 +22,8 @@ static int	r_out(t_ast *ast, t_redirect *r)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		fd = open(r->file->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 			return (perror("open"), 1);
@@ -31,13 +32,11 @@ static int	r_out(t_ast *ast, t_redirect *r)
 		close(fd);
 		exit(execute_command(ast));
 	}
-	pid = waitpid(0, &status, 0);
-	return (WEXITSTATUS(status));
+	return (handle_child_status(pid));
 }
 
 static int	r_in(t_ast *ast, t_redirect *r)
 {
-	int		status;
 	pid_t	pid;
 	int		fd;
 
@@ -46,6 +45,8 @@ static int	r_in(t_ast *ast, t_redirect *r)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		fd = open(r->file->value, O_RDONLY);
 		if (fd < 0)
 			return (perror("open"), 1);
@@ -54,13 +55,11 @@ static int	r_in(t_ast *ast, t_redirect *r)
 		close(fd);
 		exit(execute_command(ast));
 	}
-	pid = waitpid(0, &status, 0);
-	return (WEXITSTATUS(status));
+	return (handle_child_status(pid));
 }
 
 static int	r_append(t_ast *ast, t_redirect *r)
 {
-	int		status;
 	pid_t	pid;
 	int		fd;
 
@@ -69,6 +68,8 @@ static int	r_append(t_ast *ast, t_redirect *r)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		fd = open(r->file->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
 			return (perror("open"), 1);
@@ -77,8 +78,7 @@ static int	r_append(t_ast *ast, t_redirect *r)
 		close(fd);
 		exit(execute_command(ast));
 	}
-	pid = waitpid(0, &status, 0);
-	return (WEXITSTATUS(status));
+	return (handle_child_status(pid));
 }
 
 int	ft_redirections(t_ast *ast, t_redirect *r)
