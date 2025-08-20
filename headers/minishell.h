@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/19 13:46:29 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/20 22:00:35 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,12 @@ void				command_not_found(char *s);
 void				update_env_value(t_env *env_list, const char *key,
 						const char *value);
 int 				ft_redirections(t_ast *ast, t_redirect *r);
+void 				r_heredoc(t_redirect *r);
 int					execute_command(t_ast *ast);
 int					ft_pipeline(t_ast *ast);
 int 				handle_child_status(pid_t pid);
 void				sig_handler(int signal);
-void 				handler(int sig);
+int					prepare_heredoc(t_redirect *r);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 05:19:37 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 20:21:04 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,44 +39,44 @@
 //        default: return "UNKNOWN";
 //    }
 //}
-
-// Print a visual representation of tokens and their segments
-/*static void print_tokens(t_token *tokens)
-{
-    int token_count = 0;
-    
-    printf("\n=== TOKEN LIST ===\n");
-    
-    while (tokens) {
-        token_count++;
-        printf("\nToken %d: \"%s\"\n", token_count, tokens->value);
-        printf("  Type: %s\n", token_type_to_str(tokens->type));
-        printf("  Expandable: %s\n", tokens->expandable == EXPAND ? "YES" : "NO");
-        
-        // Print segments
-        t_segment *seg = tokens->segments;
-        int seg_count = 0;
-        
-        printf("  Segments:\n");
-        if (!seg) {
-            printf("    (No segments)\n");
-        }
-        
-        while (seg) {
-            seg_count++;
-            printf("    %d. \"%s\" (%s)\n", 
-                  seg_count, 
-                  seg->seg_txt, 
-                  segment_state_to_str(seg->state));
-            seg = seg->next;
-        }
-        
-        tokens = tokens->next;
-    }
-    
-    printf("\nTotal tokens: %d\n", token_count);
-    printf("=================\n\n");
-}*/
+//
+//// Print a visual representation of tokens and their segments
+//static void print_tokens(t_token *tokens)
+//{
+//    int token_count = 0;
+//    
+//    printf("\n=== TOKEN LIST ===\n");
+//    
+//    while (tokens) {
+//        token_count++;
+//        printf("\nToken %d: \"%s\"\n", token_count, tokens->value);
+//        printf("  Type: %s\n", token_type_to_str(tokens->type));
+//        printf("  Expandable: %s\n", tokens->expandable == EXPAND ? "YES" : "NO");
+//        
+//        // Print segments
+//        t_segment *seg = tokens->segments;
+//        int seg_count = 0;
+//        
+//        printf("  Segments:\n");
+//        if (!seg) {
+//            printf("    (No segments)\n");
+//        }
+//        
+//        while (seg) {
+//            seg_count++;
+//            printf("    %d. \"%s\" (%s)\n", 
+//                  seg_count, 
+//                  seg->seg_txt, 
+//                  segment_state_to_str(seg->state));
+//            seg = seg->next;
+//        }
+//        
+//        tokens = tokens->next;
+//    }
+//    
+//    printf("\nTotal tokens: %d\n", token_count);
+//    printf("=================\n\n");
+//}
 
 t_token	*tokenize(char **line)
 {

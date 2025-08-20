@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 06:27:14 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 20:20:15 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,10 +104,48 @@ t_ast *parse_command(t_token **tokens)
             {
                 return (syntax_error("expected filename after redirection", *tokens), NULL);
             }
-            redir->file = malloc(sizeof(t_expand_arg));
-            redir->file->value = ft_strdup((*tokens)->value);
-            redir->file->segments = (*tokens)->segments;
-            ft_redirlist_add_back(&node->redirects, &redir);
+            if (redir->type == REDIRECT_HEREDOC)
+            {
+                // Allocate heredoc structure
+                redir->heredoc = malloc(sizeof(t_heredoc));
+                if (!redir->heredoc)
+                    return NULL;
+                        
+                // Store delimiter and check if it's quoted
+                char *delimiter = (*tokens)->value;
+                int is_quoted = 0;
+                        
+                // Check if delimiter is quoted (for expansion control)
+                t_segment *seg = (*tokens)->segments;
+                while (seg)
+                {
+                    if (seg->state == S_QUOTED || seg->state == D_QUOTED)
+                    {
+                        is_quoted = 1;
+                        break;
+                    }
+                    seg = seg->next;
+                }
+                
+                // Setup heredoc properties
+                redir->heredoc->delimeter = ft_strdup(delimiter);
+                redir->heredoc->quoted = is_quoted;
+                redir->heredoc->fd = -1;  // Will be set during execution
+                redir->heredoc->raw_body = NULL;  // Will be filled during execution
+                
+                // Still allocate file structure for consistency
+                redir->file = malloc(sizeof(t_expand_arg));
+                redir->file->value = ft_strdup((*tokens)->value);
+                redir->file->segments = (*tokens)->segments;
+            }
+            else
+            {
+                redir->file = malloc(sizeof(t_expand_arg));
+                redir->file->value = ft_strdup((*tokens)->value);
+                redir->file->segments = (*tokens)->segments;
+                redir->heredoc = 0;
+            }
+            ft_redirlist_add_back(&(node->redirects), &redir);
             *tokens = (*tokens)->next;
         }
     }

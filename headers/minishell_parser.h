@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 06:27:40 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/20 20:19:37 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ typedef struct s_token
 	t_expand_state		expandable;
 	struct s_token		*next;
 }						t_token;
-void	init_tokens(t_token **tokens, char *s);
-void	ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
-char	*extract_token(char *s, int *i_ptr);
-t_token	*tokenize(char **line);
+void					init_tokens(t_token **tokens, char *s);
+void					ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
+char					*extract_token(char *s, int *i_ptr);
+t_token					*tokenize(char **line);
 /*
 REDIRECTIONS
 */
@@ -100,15 +100,24 @@ typedef enum e_redirect_type
 	REDIRECT_HEREDOC,
 }						t_redirect_type;
 
+typedef struct s_heredoc
+{
+	int		fd;
+	char	*delimeter;
+	int		quoted;
+	char	*raw_body;
+}						t_heredoc;
+
 typedef struct s_redirect
 {
 	t_redirect_type		type;
 	t_expand_arg		*file;
 	int					fd;
+	t_heredoc			*heredoc;
 	struct s_redirect	*next;
 }						t_redirect;
 
-void	ft_redirlist_add_back(t_redirect **redirs, t_redirect **new_redir);
+void	ft_redirlist_add_back(t_redirect **redir_list, t_redirect **new_redir);
 /*
 	SYNTAX ANALYSIS
 */
