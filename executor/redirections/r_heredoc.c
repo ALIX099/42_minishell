@@ -3,107 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   r_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/20 03:32:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 17:36:35 by ikarouat         ###   ########.fr       */
+/*   Created: 2025/08/20 23:15:56 by abouknan          #+#    #+#             */
+/*   Updated: 2025/08/20 23:48:31 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../headers/minishell.h"
 
-// Helper function to read the heredoc content
-static void read_heredoc(t_heredoc *heredoc)
+void	r_heredoc(t_redirect *r)
 {
-    char *line;
-    char *content = ft_strdup("");
-    char *temp;
-    
-    // Prompt user for input until delimiter is entered
-    while (1)
-    {
-        line = readline("> ");
-        if (!line || ft_strcmp(line, heredoc->delimeter) == 0)
-        {
-            free(line);
-            break;
-        }
-        
-        // Append line to content with newline
-        temp = content;
-        content = ft_strjoin(content, line);
-        free(temp);
-        
-        temp = content;
-        content = ft_strjoin(content, "\n");
-        free(temp);
-        
-        free(line);
-    }
-    
-    heredoc->raw_body = content;
+	int	pipefd[2];
+
+	if (pipe(pipefd) < 0)
+		return (perror("pipe"), exit(1));
+	write(pipefd[1], r->heredoc->raw_body, ft_strlen(r->heredoc->raw_body));
+	close(pipefd[1]);
+	if (dup2(pipefd[0], STDIN_FILENO) < 0)
+		return (perror("pipe"), exit(1));
+	close(pipefd[0]);
 }
 
-int r_heredoc(t_ast *ast, t_redirect *r)
+/*
+ * Collect all heredocs before executing commands.
+ * Replace heredoc redirection node with a pipe read-end.
+ */
+
+static int	ft_do_while(char **line, char **content, t_redirect *r)
 {
-    int pipe_fd[2];
-    pid_t pid;
-    int status;
-    
-    // First, read the heredoc content
-    read_heredoc(r->heredoc);
-    
-    // Create pipe
-    if (pipe(pipe_fd) < 0)
-        return (perror("pipe"), 1);
-    
-    pid = fork();
-    if (pid < 0)
-        return (perror("fork"), 1);
-    
-    if (pid == 0)
-    {
-        // Child process
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-        
-        // Close read end of pipe
-        close(pipe_fd[0]);
-        
-        // Redirect input from pipe
-        if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
-            exit(1);
-        
-        // Write heredoc content to pipe
-        if (r->heredoc->raw_body)
-            write(STDOUT_FILENO, r->heredoc->raw_body, 
-                  ft_strlen(r->heredoc->raw_body));
-        
-        close(pipe_fd[1]);
-        exit(0);
-    }
-    
-    // Parent process
-    close(pipe_fd[1]);
-    
-    // Create another fork for the command
-    pid = fork();
-    if (pid < 0)
-        return (perror("fork"), 1);
-    
-    if (pid == 0)
-    {
-        // Redirect stdin from pipe
-        if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
-            exit(1);
-        
-        close(pipe_fd[0]);
-        exit(execute_command(ast));
-    }
-    
-    // Parent process
-    close(pipe_fd[0]);
-    waitpid(0, &status, 0);
-    
-    return WEXITSTATUS(status);
+	char	*tmp;
+
+	*line = readline("> ");
+	if (!*line)
+		return (write(1, *content, ft_strlen(*content)), free(*content), 2);
+	if (!ft_strcmp(*line, r->heredoc->delimeter))
+		return (free(*line), 1);
+	tmp = *content;
+	*content = ft_strjoin(*content, *line);
+	free(tmp);
+	tmp = *content;
+	*content = ft_strjoin(*content, "\n");
+	(free(tmp), free(*line));
+	return (0);
+}
+
+void	expand_heredoc(t_heredoc *heredoc, t_exec *data)
+{
+	char	*expanded;
+
+	if (!heredoc->raw_body || heredoc->quoted)
+		return ;
+	expanded = expand_variables_in_str(heredoc->raw_body, data);
+	free(heredoc->raw_body);
+	heredoc->raw_body = expanded;
+}
+
+int	prepare_heredoc(t_redirect *r, t_exec *data)
+{
+	char	*line;
+	char	*content;
+	int		status;
+
+	(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_IGN));
+	while (r)
+	{
+		if (r->type == REDIRECT_HEREDOC)
+		{
+			content = ft_strdup("");
+			while (1)
+			{
+				status = ft_do_while(&line, &content, r);
+				if (status == 1)
+					break ;
+				if (status == 2)
+					return (1);
+			}
+			r->heredoc->raw_body = content;
+			if (r->type == REDIRECT_HEREDOC && !r->heredoc->quoted)
+				expand_heredoc(r->heredoc, data);
+		}
+		r = r->next;
+	}
+	return (0);
 }

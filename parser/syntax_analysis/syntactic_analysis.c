@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
 /*   Updated: 2025/08/20 17:32:43 by ikarouat         ###   ########.fr       */

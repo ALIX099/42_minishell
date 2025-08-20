@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tokenlist_add_back.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 14:21:41 by ikarouat          #+#    #+#             */
 /*   Updated: 2025/08/20 17:24:47 by ikarouat         ###   ########.fr       */

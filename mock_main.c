@@ -13,7 +13,18 @@
 
 #include "minishell.h"
 
-t_exec *g_exec;
+t_exec	*g_exec;
+
+void	init_vars(t_exec *data, char **envp)
+{
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
+	ft_memset(&data->is_child, 0, sizeof(int));
+	ft_memset(&data->exit_value, 0, sizeof(int));
+	data->wait_input = 1;
+	*data = init_env(envp);
+	g_exec = data;
+}
 
 void	sig_handler(int signal)
 {
@@ -21,14 +32,14 @@ void	sig_handler(int signal)
 	{
 		(void)signal;
 		g_exec->exit_value = 130;
-		write (1, "\n", 1);
-		rl_on_new_line();	
+		write(1, "\n", 1);
+		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
 
-void populate_exec_tree(t_ast **ast, t_exec *exec)
+void	populate_exec_tree(t_ast **ast, t_exec *exec)
 {
 	if (!*ast)
 		return ;
@@ -46,8 +57,8 @@ int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 	exec->wait_input = 0;
 	if (!*line)
 	{
-		write (1, "exit\n", 5);
-		return(0);
+		write(1, "exit\n", 5);
+		return (0);
 	}
 	if (**line)
 		add_history(*line);
@@ -65,13 +76,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	signal(SIGINT, sig_handler);
-    signal(SIGQUIT, SIG_IGN);
-	ft_memset(&exec.is_child, 0, sizeof(int));
-	ft_memset(&exec.exit_value, 0, sizeof(int));
-	exec.wait_input = 1;
-	exec = init_env(envp);
-	g_exec = &exec;
+	init_vars(&exec, envp);
 	while (ft_readline(&line, &cmds, &exec))
 	{
 		expand(cmds);

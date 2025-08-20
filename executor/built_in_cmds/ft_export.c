@@ -3,16 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:03 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 23:24:32 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/20 05:17:35 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void	print_export(t_exec *data)
+static void	up_or_add(t_exec *data)
+{
+	update_env_value(data->my_env, data->key, data->value);
+	if (!get_env(data->my_env, data->key))
+		add_back(&data->my_env, env_new(data->key, data->value));
+	(free(data->key), free(data->value));
+}
+
+static void	print_export(t_exec *data)
 {
 	int		i;
 	char	**export_array;
@@ -61,7 +69,7 @@ static int	valid_export(char *value)
 	return (1);
 }
 
-static void	export_args(t_expand_arg **args, t_exec *data)
+static void	export_args(t_expand_arg **args, t_exec *data, int *export)
 {
 	int		i;
 	char	*sign;
@@ -70,7 +78,10 @@ static void	export_args(t_expand_arg **args, t_exec *data)
 	while (args[++i] != 0 && args[i]->value)
 	{
 		if (!valid_export(args[i]->value))
+		{
+			*export = 1;
 			continue ;
+		}
 		sign = ft_strchr(args[i]->value, '=');
 		if (sign)
 		{
@@ -82,15 +93,15 @@ static void	export_args(t_expand_arg **args, t_exec *data)
 			data->key = ft_strdup(args[i]->value);
 			data->value = NULL;
 		}
-		update_env_value(data->my_env, data->key, data->value);
-		if (!get_env(data->my_env, data->key))
-			add_back(&data->my_env, env_new(data->key, data->value));
-		(free(data->key), free(data->value));
+		up_or_add(data);
 	}
 }
 
 int	ft_export(t_ast *ast, t_expand_arg **args)
 {
+	int export;
+
+	export = 0;
 	if (count_args(args) == 1)
 		return (print_export(ast->exec), 0);
 	if (!ast || args[1]->value == 0)
@@ -99,6 +110,8 @@ int	ft_export(t_ast *ast, t_expand_arg **args)
 				": not a valid identifier\n", 25), 1);
 	if (count_args(args) > 1 && args[1]->value[0] == '-')
 		return (write(2, "rsh: export: options are invalid\n", 30), 1);
-	export_args(args, ast->exec);
+	export_args(args, ast->exec, &export);
+	if (export)
+		return (1);
 	return (0);
 }

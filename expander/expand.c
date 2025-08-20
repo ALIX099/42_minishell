@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
 /*   Updated: 2025/08/20 17:35:57 by ikarouat         ###   ########.fr       */
@@ -189,7 +189,7 @@ char    *expand_wildcard(char *str)
     return (result);
 }
 
-char    *expand_variables_in_str(char *str)
+char    *expand_variables_in_str(char *str, t_exec *data)
 {
     char *result = ft_strdup(str);
     char *dollar;
@@ -209,7 +209,7 @@ char    *expand_variables_in_str(char *str)
         char *env_var = malloc(var_len + 1);
         ft_strlcpy(env_var, (dollar + 1), var_len + 1);
         
-        char *env_val = getenv(env_var);
+        char *env_val = get_env_value(data->my_env, env_var);
         if (!env_val)
             env_val = "";
             
@@ -229,18 +229,7 @@ char    *expand_variables_in_str(char *str)
     return result;
 }
 
-void    expand_heredoc(t_heredoc *heredoc)
-{
-    char    *expanded;
-
-    if (!heredoc->raw_body || heredoc->quoted)
-        return ;
-    expanded = expand_variables_in_str(heredoc->raw_body);
-    free(heredoc->raw_body);
-    heredoc->raw_body = expanded;
-}
-
-void    expand_node(char **arg, t_segment *segments)
+void    expand_node(char **arg, t_segment *segments, t_exec *data)
 {
 	char        *result;
     char        *expanded_segment;
@@ -252,7 +241,7 @@ void    expand_node(char **arg, t_segment *segments)
         
     result = ft_strdup("");
     current = segments;
-    
+
     while (current)
     {
         // Handle segment based on its type
@@ -263,11 +252,11 @@ void    expand_node(char **arg, t_segment *segments)
         }
         else if (current->state == D_QUOTED)
         {
-            expanded_segment = expand_variables_in_str(current->seg_txt);
+            expanded_segment = expand_variables_in_str(current->seg_txt, data);
         }
         else
         {
-            env_expand_segment = expand_variables_in_str(current->seg_txt);
+            env_expand_segment = expand_variables_in_str(current->seg_txt, data);
             expanded_segment = expand_wildcard(env_expand_segment);
         }
         // Append expanded segment to result
@@ -284,7 +273,7 @@ void    expand_node(char **arg, t_segment *segments)
     *arg = result;
 }
 
-void	expand_redir_list(t_redirect **redirections)
+void	expand_redir_list(t_redirect **redirections, t_exec *data)
 {
 	t_redirect	*tmp;
 
@@ -293,8 +282,6 @@ void	expand_redir_list(t_redirect **redirections)
 	{
 		if (tmp->type != REDIRECT_HEREDOC)
 			expand_node(&(tmp->file->value), tmp->file->segments);
-        else if (tmp->type == REDIRECT_HEREDOC && !(tmp->heredoc->quoted))
-            expand_heredoc(tmp->heredoc);
 		tmp = tmp->next;
 	}
 	return ;
@@ -310,14 +297,13 @@ void	expand(t_ast *ast)
 	{
 		i = 0;
 		while (ast->argv[i])
-		{
-			
-			expand_node(&ast->argv[i]->value, ast->argv[i]->segments);
-            handle_word_splitting(ast);
+    {
+      expand_node(&ast->argv[i]->value, ast->argv[i]->segments, ast->exec);
+      handle_word_splitting(ast);
 			i++;
 		}
 		if (ast->redirects)
-			expand_redir_list(&ast->redirects);
+			expand_redir_list(&ast->redirects, ast->exec);
 	}
 	else
 	{
