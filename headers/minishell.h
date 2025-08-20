@@ -70,6 +70,8 @@ int 				ft_redirections(t_ast *ast, t_redirect *r);
 int					execute_command(t_ast *ast);
 int					ft_pipeline(t_ast *ast);
 int 				handle_child_status(pid_t pid);
+void				sig_handler(int signal);
+void 				handler(int sig);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

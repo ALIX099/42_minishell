@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/18 14:08:31 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:48:03 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	execute_command(t_ast *ast)
 int	execute_subshell(t_ast *ast)
 {
 	pid_t	pid;
-	int value;
+	int		value;
 
 	if (!ast)
 		return (0);
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), 1);
+	return (perror("fork"), 1);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -97,14 +97,14 @@ int	execute(t_ast *ast)
 	return (0); // Exit Status
 }
 
-int handle_child_status(pid_t pid)
+int	handle_child_status(pid_t pid)
 {
-    int status;
+	int	status;
 
-    waitpid(pid, &status, 0);
-    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
-        write(1, "Quit (core dumped)\n", 19);
-    if (WIFSIGNALED(status))
-        return (128 + WTERMSIG(status));
-    return (WEXITSTATUS(status));
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+		write(1, "Quit (core dumped)\n", 19);
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (WEXITSTATUS(status));
 }

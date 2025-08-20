@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/18 14:27:55 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:51:00 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	ft_single_left(t_ast *left, int fds[2])
 {
 	int	exit_status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(fds[0]);
 	if (dup2(fds[1], STDOUT_FILENO) < 0)
 	{
@@ -33,6 +35,8 @@ static void	ft_single_right(t_ast *right, int fds[2])
 {
 	int	exit_status;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	close(fds[1]);
 	if (dup2(fds[0], STDIN_FILENO) < 0)
 	{

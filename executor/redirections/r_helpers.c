@@ -12,5 +12,4 @@
 
 #include "../headers/minishell.h"
 
-
-//only if you need it in hearedoc
+// only if you need it in hearedoc
