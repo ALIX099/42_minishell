@@ -6,11 +6,13 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 23:15:56 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/20 23:48:31 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/21 01:22:18 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+static void	should_expand(t_redirect *r, t_exec *data);
 
 void	r_heredoc(t_redirect *r)
 {
@@ -30,13 +32,14 @@ void	r_heredoc(t_redirect *r)
  * Replace heredoc redirection node with a pipe read-end.
  */
 
-static int	ft_do_while(char **line, char **content, t_redirect *r)
+static int	ft_do_while(char **line, char **content, t_redirect *r,
+		t_exec *data)
 {
 	char	*tmp;
 
 	*line = readline("> ");
 	if (!*line)
-		return (write(1, *content, ft_strlen(*content)), free(*content), 2);
+		return (r->heredoc->raw_body = *content, should_expand(r, data), 2);
 	if (!ft_strcmp(*line, r->heredoc->delimeter))
 		return (free(*line), 1);
 	tmp = *content;
@@ -59,6 +62,12 @@ void	expand_heredoc(t_heredoc *heredoc, t_exec *data)
 	heredoc->raw_body = expanded;
 }
 
+static void	should_expand(t_redirect *r, t_exec *data)
+{
+	if (r->type == REDIRECT_HEREDOC && !r->heredoc->quoted)
+		expand_heredoc(r->heredoc, data);
+}
+
 int	prepare_heredoc(t_redirect *r, t_exec *data)
 {
 	char	*line;
@@ -73,15 +82,14 @@ int	prepare_heredoc(t_redirect *r, t_exec *data)
 			content = ft_strdup("");
 			while (1)
 			{
-				status = ft_do_while(&line, &content, r);
+				status = ft_do_while(&line, &content, r, data);
 				if (status == 1)
 					break ;
 				if (status == 2)
 					return (1);
 			}
 			r->heredoc->raw_body = content;
-			if (r->type == REDIRECT_HEREDOC && !r->heredoc->quoted)
-				expand_heredoc(r->heredoc, data);
+			should_expand(r, data);
 		}
 		r = r->next;
 	}
