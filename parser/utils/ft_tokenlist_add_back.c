@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tokenlist_add_back.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 14:21:41 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 17:24:47 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 06:52:18 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_redirlist_add_back(t_redirect **redirs, t_redirect **new_redir)
 {
 	t_redirect	*tmp;
-	
+
 	if (!(*redirs))
 	{
 		*redirs = *new_redir;
@@ -34,7 +34,7 @@ void	ft_redirlist_add_back(t_redirect **redirs, t_redirect **new_redir)
 void	ft_tokenlist_add_back(t_token **tokens, t_token **new_token)
 {
 	t_token	*tmp;
-	
+
 	if (!(*tokens))
 	{
 		*tokens = *new_token;

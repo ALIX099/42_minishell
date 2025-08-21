@@ -3,11 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mock_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/16 02:40:38 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/17 04:01:27 by abouknan         ###   ########.fr       */
+/*   Created: 2025/08/16 02:40:38 by abouknan          #+#    #+#             */
+/*   Updated: 2025/08/21 06:41:50 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +61,7 @@ int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 	}
 	if (**line)
 		add_history(*line);
-	*cmds = parse(*line); // Output: Abstract Syntax Tree
+	*cmds = parse(*line);
 	if (*cmds)
 		populate_exec_tree(cmds, exec);
 	return (1);
@@ -81,10 +80,10 @@ int	main(int ac, char **av, char **envp)
 	{
 		expand(cmds);
 		execute(cmds);
-		// free(line);
-		// free_ast(cmds); // Free AST from parse()
+		free(line);
 	}
 	rl_clear_history();
-	// cleanup_env(&exec);
+	free_ast(cmds);
+	//free_env(&exec);
 	return (0);
 }

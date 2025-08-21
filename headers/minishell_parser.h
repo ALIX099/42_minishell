@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 17:38:12 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 07:21:11 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 # define MINISHELL_PARSER_H
 
 # include "../libft/libft.h"
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <dirent.h>
 # include <signal.h>
+# include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
-# include <stddef.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -44,7 +44,6 @@ typedef enum e_expand_state
 	EXPAND,
 	NO_EXPAND
 }						t_expand_state;
-
 
 typedef struct s_segment
 {
@@ -85,10 +84,19 @@ typedef struct s_token
 	t_expand_state		expandable;
 	struct s_token		*next;
 }						t_token;
+int						is_special_char(const char *s, int c);
+t_token_type			get_token_type(char *s);
 void					init_tokens(t_token **tokens, char *s);
-void					ft_tokenlist_add_back(t_token **token_list, t_token **new_token);
+void					ft_tokenlist_add_back(t_token **token_list,
+							t_token **new_token);
 char					*extract_token(char *s, int *i_ptr);
 t_token					*tokenize(char **line);
+// Segmentation utils
+t_segment				*create_seg(char *text, t_segment_state type);
+void					add_seg(t_segment **head, t_segment *new_segment);
+int						read_until_quote(char **s, int i, char quote,
+							char **out);
+int						process_token_segments(t_token *token, char *s, int i);
 /*
 REDIRECTIONS
 */
@@ -102,10 +110,10 @@ typedef enum e_redirect_type
 
 typedef struct s_heredoc
 {
-	int		fd;
-	char	*delimeter;
-	int		quoted;
-	char	*raw_body;
+	int					fd;
+	char				*delimeter;
+	int					quoted;
+	char				*raw_body;
 }						t_heredoc;
 
 typedef struct s_redirect
@@ -117,7 +125,6 @@ typedef struct s_redirect
 	struct s_redirect	*next;
 }						t_redirect;
 
-void	ft_redirlist_add_back(t_redirect **redir_list, t_redirect **new_redir);
 /*
 	SYNTAX ANALYSIS
 */
@@ -140,27 +147,27 @@ typedef struct s_ast
 	struct s_exec		*exec;
 }						t_ast;
 
+// Segmetation
+int						process_quoted_segment(t_token *token, char *s, int i,
+							char quote);
 t_ast					*syntactic_analysis(t_token *tokens);
 t_ast					*parse(char *line);
+size_t					count_tok_args(t_token *tokens);
 // Recursive Decsent Parser
 t_ast					*parse_logical_expr(t_token **tokens);
 t_ast					*parse_pipeline(t_token **tokens);
 t_ast					*parse_command(t_token **tokens);
+t_ast					*create_subshell_node(t_token **tokens);
 // Syntax Error Reporting
 void					syntax_error(const char *msg, t_token *token);
-
-/* REPLACED WITH AST
-
-typedef struct s_command
-{
-	char				*command;
-	char				**args;
-	char				**envp;
-	t_redirect			*redirects;
-	struct s_command	*next;
-}						t_command;
-*/
-
+// Redirections utils
+t_redirect_type			get_redirect_type(t_token_type tok_type);
+void					ft_redirlist_add_back(t_redirect **redir_list,
+							t_redirect **new_redir);
+t_redirect				*setup_heredoc(t_token **tokens);
+int						process_redirection(t_ast *node, t_token **tokens);
+t_redirect				*setup_redirection(t_token **tokens,
+							t_redirect_type type);
 // Utils
 int						ft_isspace(char c);
 int						ft_strcmp(const char *s1, const char *s2);

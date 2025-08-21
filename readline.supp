@@ -1,0 +1,30 @@
+{
+   readline_malloc
+   Memcheck:Leak
+   fun:malloc
+   obj:/lib/x86_64-linux-gnu/libreadline.so.*
+   ...
+}
+
+{
+   readline_realloc
+   Memcheck:Leak
+   fun:realloc
+   obj:/lib/x86_64-linux-gnu/libreadline.so.*
+   ...
+}
+
+{
+   readline_free
+   Memcheck:Leak
+   fun:free
+   obj:/lib/x86_64-linux-gnu/libreadline.so.*
+   ...
+}
+
+{
+   readline_general
+   Memcheck:Leak
+   obj:/lib/x86_64-linux-ginux-gnu/libreadline.so.*
+   ...
+}
