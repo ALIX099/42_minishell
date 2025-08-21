@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 06:41:20 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 13:33:57 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ int					handle_child_status(pid_t pid);
 void				sig_handler(int signal);
 char				*expand_variables_in_str(char *str, t_exec *data);
 int					prepare_heredoc(t_redirect *r, t_exec *data);
-// Cleanup
-void				free_ast(t_ast *ast);
+//Cleanup
 void				free_env(t_exec *exec);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);

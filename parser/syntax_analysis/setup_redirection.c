@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 03:51:41 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:45:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:01:36 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_redirect	*setup_redirection(t_token **tokens, t_redirect_type type)
 	}
 	redir->file = malloc(sizeof(t_expand_arg));
 	redir->file->value = ft_strdup((*tokens)->value);
-	redir->file->segments = (*tokens)->segments;
+	redir->file->segments = deep_copy_segments((*tokens)->segments);
 	redir->heredoc = NULL;
 	return (redir);
 }

@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 02:40:38 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 06:41:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:03:05 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ int	main(int ac, char **av, char **envp)
 		expand(cmds);
 		execute(cmds);
 		free(line);
+		free_ast(cmds);
 	}
 	rl_clear_history();
-	free_ast(cmds);
-	//free_env(&exec);
+	free_env(&exec);
 	return (0);
 }

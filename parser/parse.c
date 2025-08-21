@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 11:51:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:42:49 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 13:50:28 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,6 @@ t_ast	*parse(char *line)
 		return (NULL);
 	ast = syntactic_analysis(tokens);
 	if (!ast)
-	{
-		free(tokens);
 		return (NULL);
-	}
 	return (ast);
 }

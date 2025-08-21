@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 03:48:16 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:44:24 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 13:47:44 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	setup_heredoc_file(t_redirect *redir, t_token *token)
 	if (!redir->file)
 		return (0);
 	redir->file->value = ft_strdup(token->value);
-	redir->file->segments = token->segments;
+	redir->file->segments = deep_copy_segments(token->segments);
 	return (1);
 }
 

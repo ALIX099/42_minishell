@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 07:21:11 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 13:52:05 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,10 @@ typedef struct s_ast
 // Segmetation
 int						process_quoted_segment(t_token *token, char *s, int i,
 							char quote);
+t_segment				*deep_copy_segments(t_segment *source);
+void					process_command_tokens(t_ast *node, t_token **tokens, size_t *argc);
+void					process_word_token(t_ast *node, t_token **tokens, size_t *argc);
+int						is_valid_command_token(t_token_type type);
 t_ast					*syntactic_analysis(t_token *tokens);
 t_ast					*parse(char *line);
 size_t					count_tok_args(t_token *tokens);
@@ -172,5 +176,7 @@ t_redirect				*setup_redirection(t_token **tokens,
 int						ft_isspace(char c);
 int						ft_strcmp(const char *s1, const char *s2);
 char					*ft_strndup(char *s, int n);
-
+// Cleanup
+void					free_ast(t_ast *ast);
+void					free_token(t_token *token);
 #endif // MINISHELL_PARSER_H

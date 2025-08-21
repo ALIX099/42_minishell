@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 18:58:37 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:50:50 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:01:10 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ t_token	*tokenize(char **line)
 	trimmed_line = ft_strtrim(*line, " \n\t\v\r\f");
 	line = &trimmed_line;
 	init_tokens(&tokens, *line);
+	free(trimmed_line);
 	return (tokens);
 }

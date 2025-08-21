@@ -6,7 +6,7 @@
 /*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 04:06:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 07:08:47 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 15:07:16 by ikarouat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static int	match_pattern(const char *pattern, const char *filename)
 		{
 			if (match_pattern(pattern + 1, filename + i))
 				return (1);
+			i++;
 		}
 		return (0);
 	}
