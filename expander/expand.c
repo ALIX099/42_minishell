@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:57:35 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 17:35:57 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 00:50:38 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,7 @@ void	expand_redir_list(t_redirect **redirections, t_exec *data)
 	while (tmp)
 	{
 		if (tmp->type != REDIRECT_HEREDOC)
-			expand_node(&(tmp->file->value), tmp->file->segments);
+			expand_node(&(tmp->file->value), tmp->file->segments, data);
 		tmp = tmp->next;
 	}
 	return ;
