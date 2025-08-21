@@ -3,87 +3,135 @@
 /*                                                        :::      ::::::::   */
 /*   free_structs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 06:32:03 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 15:12:19 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:07:18 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_redirects(t_redirect *redirects)
+void free_array(char **array)
 {
-	t_redirect	*curr;
-	t_redirect	*next;
+    int i;
 
-	curr = redirects;
-	while (curr)
-	{
-		next = curr->next;
-		if (curr->file)
-		{
-			free(curr->file->value);
-			free(curr->file);
-		}
-		if (curr->heredoc)
-		{
-			free(curr->heredoc->delimeter);
-			free(curr->heredoc->raw_body);
-			free(curr->heredoc);
-		}
-		free(curr);
-		curr = next;
-	}
+    if (!array)
+        return;
+    i = 0;
+    while (array[i])
+    {
+        free(array[i]);
+        i++;
+    }
+    free(array);
 }
 
-static void	free_segments(t_segment *segments)
+void free_segment(t_segment *segment)
 {
-	t_segment	*curr;
-	t_segment	*next;
-
-	curr = segments;
-	while (curr)
-	{
-		next = curr->next;
-		if (curr->seg_txt)
-			free(curr->seg_txt);
-		free(curr);
-		curr = next;
-	}
+    if (!segment)
+        return;
+        
+    if (segment->seg_txt)
+        free(segment->seg_txt);
+    free(segment);
 }
 
-static void	free_argv(t_expand_arg **argv)
+// Free a linked list of segments
+void free_segments(t_segment *segments)
 {
-	int	i;
+    t_segment *curr;
+    t_segment *next;
 
-	if (!argv)
-		return ;
-	i = 0;
-	while (argv[i])
-	{
-		free(argv[i]->value);
-		free_segments(argv[i]->segments);
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
+    curr = segments;
+    while (curr)
+    {
+        next = curr->next;
+        free_segment(curr);
+        curr = next;
+    }
 }
 
-void	free_ast(t_ast *ast)
+// Free a redirect and all its components
+void free_redirect(t_redirect *redirect)
 {
-	if (!ast)
-		return ;
-	free_ast(ast->left);
-	ast->left = NULL;
-	free_ast(ast->right);
-	ast->right = NULL;
-	if (ast->type == NODE_CMD)
-	{
-		free_argv(ast->argv);
-		free_redirects(ast->redirects);
-	}
-	free(ast);
+    if (!redirect)
+        return;
+        
+    if (redirect->file)
+    {
+        free(redirect->file->value);
+        free_segments(redirect->file->segments);
+        free(redirect->file);
+    }
+    
+    if (redirect->heredoc)
+    {
+        free(redirect->heredoc->delimeter);
+        free(redirect->heredoc->raw_body);
+        free(redirect->heredoc);
+    }
+    
+    free(redirect);
+}
+
+// Free a linked list of redirects
+void free_redirects(t_redirect *redirects)
+{
+    t_redirect *curr;
+    t_redirect *next;
+
+    curr = redirects;
+    while (curr)
+    {
+        next = curr->next;
+        free_redirect(curr);
+        curr = next;
+    }
+}
+
+// Free an array of expand_args
+void free_argv(t_expand_arg **argv)
+{
+    int i;
+
+    if (!argv)
+        return;
+    
+    i = 0;
+    while (argv[i])
+    {
+        if (argv[i]->value)
+            free(argv[i]->value);
+        free_segments(argv[i]->segments);
+        free(argv[i]);
+        i++;
+    }
+    free(argv);
+}
+
+// Free an entire AST node and its components
+void free_ast(t_ast *ast)
+{
+    if (!ast)
+        return;
+        
+    // Recursively free child nodes
+    free_ast(ast->left);
+    free_ast(ast->right);
+    
+    // Free node components
+    if (ast->redirects)
+        free_redirects(ast->redirects);
+        
+    if (ast->argv)
+        free_argv(ast->argv);
+        
+    // Uncomment if you need to free exec
+    // if (ast->exec && ast != global_ast)
+    //     free_exec(ast->exec);
+    
+    free(ast);
 }
 
 void free_token(t_token *token)
@@ -106,7 +154,21 @@ void free_token(t_token *token)
     free(token);
 }
 
-void	free_env(t_exec *exec)
+void free_token_list(t_token *tokens)
+{
+    t_token *current;
+    t_token *next;
+    
+    current = tokens;
+    while (current)
+    {
+        next = current->next;
+        free_token(current);
+        current = next;
+    }
+}
+
+void	free_exec(t_exec *exec)
 {
 	t_env *curr;
     t_env *next;
@@ -115,8 +177,10 @@ void	free_env(t_exec *exec)
     while (curr)
     {
         next = curr->next;
-        free(curr->key);
-        free(curr->value);
+		if (curr->key)
+        	free(curr->key);
+        if (curr->value)
+			free(curr->value);
         free(curr);
         curr = next;
     }

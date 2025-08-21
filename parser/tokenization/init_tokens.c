@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_tokens.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:20:30 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:49:51 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:43:24 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,11 @@ static void	str_to_tokens(t_token **tokens, char *s)
 	t_token	*new_token;
 	int		start;
 	int		next_pos;
+	t_token	*head;
 
 	if (!s || !*s)
 		return ;
+	head = *tokens;
 	start = skip_whitespace(s);
 	if (!s[start])
 		return ;
@@ -80,6 +82,7 @@ static void	str_to_tokens(t_token **tokens, char *s)
 	next_pos = handle_token_type(new_token, s, start);
 	if (next_pos < 0)
 	{
+		free_token_list(head);
 		*tokens = NULL;
 		return ;
 	}

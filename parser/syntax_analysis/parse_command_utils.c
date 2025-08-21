@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:40:46 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 13:59:28 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:19:49 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	process_command_tokens(t_ast *node, t_token **tokens, size_t *argc)
 		{
 			if (!process_redirection(node, tokens))
 				return ;
-			free_token(curr_token);
+			//free_token(curr_token);
 		}
 	}
 	node->argv[*argc] = NULL;

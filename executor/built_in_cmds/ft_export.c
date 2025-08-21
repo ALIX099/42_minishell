@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:03 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/20 05:17:35 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:58:21 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,9 @@ static void	print_export(t_exec *data)
 		}
 		else
 			printf("%s\n", export_array[i]);
-		free(export_array[i]);
 		i++;
 	}
-	free(export_array);
+	free_array(export_array);
 }
 
 static int	valid_export(char *value)
@@ -99,7 +98,7 @@ static void	export_args(t_expand_arg **args, t_exec *data, int *export)
 
 int	ft_export(t_ast *ast, t_expand_arg **args)
 {
-	int export;
+	int	export;
 
 	export = 0;
 	if (count_args(args) == 1)

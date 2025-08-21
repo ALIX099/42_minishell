@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 13:52:05 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:08:17 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,4 +179,5 @@ char					*ft_strndup(char *s, int n);
 // Cleanup
 void					free_ast(t_ast *ast);
 void					free_token(t_token *token);
+void 					free_token_list(t_token *tokens);
 #endif // MINISHELL_PARSER_H

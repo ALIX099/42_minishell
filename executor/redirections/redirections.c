@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 15:19:05 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:34:53 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ static void	r_append(t_redirect *r)
 int	ft_redirections(t_ast *ast, t_redirect *r)
 {
 	pid_t	pid;
+	int		exit_status;
 
 	pid = fork();
 	if (pid < 0)
@@ -88,7 +89,10 @@ int	ft_redirections(t_ast *ast, t_redirect *r)
 				(prepare_heredoc(r, ast->exec), r_heredoc(r));
 			r = r->next;
 		}
-		exit(execute_command(ast));
+		exit_status = execute_command(ast);
+		free_exec(ast->exec);
+		free_ast(ast);
+		exit(exit_status);
 	}
 	else
 		return (handle_child_status(pid));

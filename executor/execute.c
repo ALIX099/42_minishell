@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/20 22:01:58 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:19:30 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,14 @@ int	execute_subshell(t_ast *ast)
 		return (0);
 	pid = fork();
 	if (pid == -1)
-	return (perror("fork"), 1);
+		return (perror("fork"), 1);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		value = execute(ast->left);
-		// free_list();
+		free_exec(ast->exec);
+		free_ast(ast);
 		exit(value);
 	}
 	return (handle_child_status(pid));
@@ -100,11 +101,16 @@ int	execute(t_ast *ast)
 int	handle_child_status(pid_t pid)
 {
 	int	status;
+	int	ret;
 
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		write(1, "Quit (core dumped)\n", 19);
 	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (WEXITSTATUS(status));
+		ret = 128 + WTERMSIG(status);
+	else
+		ret = WEXITSTATUS(status);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+		;
+	return (ret);
 }

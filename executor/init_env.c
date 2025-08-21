@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/02 10:00:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/21 05:43:10 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:23:18 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,14 @@ static void	change_values(t_env *env)
 		if (!ft_strcmp(tmp->key, "SHLVL"))
 		{
 			nb = ft_atoi(tmp->value);
-			free(tmp->value);
+			if (tmp->value)
+				free(tmp->value);
 			tmp->value = ft_itoa(nb + 1);
 		}
 		else if (!ft_strcmp(tmp->key, "_"))
 		{
-			free(tmp->value);
+			if (tmp->value)
+				free(tmp->value);
 			tmp->value = ft_strdup("/usr/bin/env");
 		}
 		tmp = tmp->next;

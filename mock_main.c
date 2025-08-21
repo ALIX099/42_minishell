@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mock_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 02:40:38 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 15:03:05 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:56:11 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,13 @@ void	init_vars(t_exec *data, char **envp)
 {
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);
-	ft_memset(&data->is_child, 0, sizeof(int));
-	ft_memset(&data->exit_value, 0, sizeof(int));
+	ft_memset(&data->key, 0, sizeof(char *));
+	ft_memset(&data->value, 0, sizeof(char *));
+	ft_memset(&data->my_env, 0, sizeof(t_env));
 	data->wait_input = 1;
 	*data = init_env(envp);
+	data->is_child = 0;
+	data->exit_value = 0;
 	g_exec = data;
 }
 
@@ -67,23 +70,23 @@ int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 	return (1);
 }
 
-int	main(int ac, char **av, char **envp)
+int main(int ac, char **av, char **envp)
 {
-	char	*line;
-	t_ast	*cmds;
-	t_exec	exec;
+    char *line;
+    t_ast *cmds;
+    t_exec exec;
 
-	(void)ac;
-	(void)av;
-	init_vars(&exec, envp);
-	while (ft_readline(&line, &cmds, &exec))
-	{
-		expand(cmds);
-		execute(cmds);
-		free(line);
-		free_ast(cmds);
-	}
-	rl_clear_history();
-	free_env(&exec);
-	return (0);
+    (void)ac;
+    (void)av;
+    init_vars(&exec, envp);
+    while (ft_readline(&line, &cmds, &exec))
+    {
+        expand(cmds);
+        execute(cmds);
+        free(line);
+        free_ast(cmds);
+    }
+    free_exec(&exec);
+    rl_clear_history();
+    return (0);
 }

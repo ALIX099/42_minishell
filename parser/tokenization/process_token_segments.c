@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_token_segments.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 03:25:00 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 06:51:30 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 22:58:25 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ static void	build_token_value(t_token *token)
 int	process_token_segments(t_token *token, char *s, int i)
 {
 	int	start;
+	int	in_quotes;
 
+	in_quotes = 0;
 	start = i;
 	token->segments = NULL;
 	token->expandable = EXPAND;
@@ -55,16 +57,22 @@ int	process_token_segments(t_token *token, char *s, int i)
 			|| s[start] == '\'' || s[start] == '"'))
 	{
 		if (s[i] == '\'' || s[i] == '"')
-		{
-			i = process_quoted_segment(token, s, i, s[i]);
-			if (i < 0)
-				return (-1);
-		}
-		else
-			i = process_plain_segment(token, s, i, start);
-		if (s[i] && is_special_char("()<>|&", s[i]) && s[start] != '\''
-			&& s[start] != '"')
-			break ;
+        {
+            char quote_char = s[i];
+            in_quotes = 1;
+            i = process_quoted_segment(token, s, i, quote_char);
+            if (i < 0)
+                return (-1);
+            in_quotes = 0;
+            if (s[i] && is_special_char("()<>|&", s[i]))
+                break;
+        }
+        else
+        {
+            if (!in_quotes && is_special_char("()<>|&", s[i]))
+                break;
+            i = process_plain_segment(token, s, i, start);
+        }
 	}
 	build_token_value(token);
 	return (i - start);

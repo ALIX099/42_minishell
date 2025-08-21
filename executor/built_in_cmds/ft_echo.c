@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macbookpro <macbookpro@student.42.fr>      +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/15 16:24:00 by macbookpro       ###   ########.fr       */
+/*   Updated: 2025/08/21 20:08:46 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static int	check_echo_flag(t_expand_arg **args, int *start)
 
 	i = 1;
 	n_flag = 0;
-	while (args[i]->value && args[i] && args[i]->value[0] == '-')
+	while (args[i] && args[i]->value && args[i]->value[0] == '-')
 	{
 		if (args[i]->value[1] == '\0')
 			break ;

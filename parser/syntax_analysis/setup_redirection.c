@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirection.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 03:51:41 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 14:01:36 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:17:21 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	process_redirection(t_ast *node, t_token **tokens)
 {
 	t_redirect	*redir;
+	t_token		*old;
 
 	if ((*tokens)->type == IS_REDIRECT_HEREDOC)
 		redir = setup_heredoc(tokens);
@@ -23,17 +24,22 @@ int	process_redirection(t_ast *node, t_token **tokens)
 	if (!redir)
 		return (0);
 	ft_redirlist_add_back(&(node->redirects), &redir);
+	old = *tokens;
 	*tokens = (*tokens)->next;
+	free_token(old);
 	return (1);
 }
 
 t_redirect	*setup_redirection(t_token **tokens, t_redirect_type type)
 {
 	t_redirect	*redir;
+	t_token		*old;
 
 	redir = malloc(sizeof(t_redirect));
 	redir->type = type;
+	old = *tokens;
 	*tokens = (*tokens)->next;
+	free_token(old);
 	if (!*tokens || (*tokens)->type != IS_WORD)
 	{
 		syntax_error("expected filename after redirection", *tokens);

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 08:54:22 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/17 04:17:18 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:43:17 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,27 @@ char	**append_args(t_expand_arg **argv)
 char	*get_env_value(t_env *env, const char *key)
 {
 	char	**my_env;
+	char	*result;
 	int		len;
 	int		i;
 
 	i = 0;
+	result = NULL;
 	my_env = append_to_array(env, 0);
+	if (!my_env)
+		return (NULL);
 	len = ft_strlen(key);
 	while (my_env[i])
 	{
 		if (!ft_strncmp(my_env[i], key, len) && my_env[i][len] == '=')
-			return (&my_env[i][len + 1]);
+		{
+			result = ft_strdup(&my_env[i][len + 1]);
+			break ;
+		}
 		i++;
 	}
-	return (NULL);
+	free_array(my_env);
+	return (result);
 }
 
 static void	swap_strings(char **a, char **b)

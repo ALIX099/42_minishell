@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntactic_analysis.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 13:52:23 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:34:32 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,14 @@ t_ast	*parse_pipeline(t_token **tokens)
 	t_ast	*left;
 	t_ast	*right;
 	t_ast	*parent;
+	t_token	*old;
 
 	left = parse_command(tokens);
 	while (*tokens && (*tokens)->type == IS_PIPE)
 	{
+		old = *tokens;
 		*tokens = (*tokens)->next;
+		free_token(old);
 		right = parse_command(tokens);
 		if (!right)
 			return (syntax_error("expected command after operator", *tokens),
@@ -76,6 +79,7 @@ t_ast	*parse_logical_expr(t_token **tokens)
 	t_ast_type	type;
 	t_ast		*right;
 	t_ast		*parent;
+	t_token		*old;
 
 	left = parse_pipeline(tokens);
 	while (*tokens && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
@@ -84,7 +88,9 @@ t_ast	*parse_logical_expr(t_token **tokens)
 			type = NODE_AND;
 		else
 			type = NODE_OR;
+		old = *tokens;
 		*tokens = (*tokens)->next;
+		free_token(old);
 		right = parse_pipeline(tokens);
 		if (!right)
 			return (syntax_error("no command after logical op",*tokens), NULL);

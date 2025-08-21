@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 13:33:57 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/21 23:08:12 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct s_env
 typedef struct s_exec
 {
 	t_env			*my_env;
-	char			**env;
 	int				exit_value;
 	int				is_child;
 	char			*key;
@@ -84,7 +83,11 @@ void				sig_handler(int signal);
 char				*expand_variables_in_str(char *str, t_exec *data);
 int					prepare_heredoc(t_redirect *r, t_exec *data);
 //Cleanup
-void				free_env(t_exec *exec);
+void	free_exec(t_exec *exec);
+void 				free_array(char **array);
+void 				free_argv(t_expand_arg **argv);
+void 				free_segments(t_segment *segments);
+void				free_ast(t_ast *ast);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);
 

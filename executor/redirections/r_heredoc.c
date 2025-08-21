@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 23:15:56 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 01:22:18 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:03:35 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,9 @@ int	prepare_heredoc(t_redirect *r, t_exec *data)
 				if (status == 1)
 					break ;
 				if (status == 2)
-					return (1);
+					return (free(content), 1);
 			}
+			free(r->heredoc->raw_body);
 			r->heredoc->raw_body = content;
 			should_expand(r, data);
 		}
