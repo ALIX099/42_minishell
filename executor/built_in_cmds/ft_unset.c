@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:49:57 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/18 14:10:52 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:55:39 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_unset(t_env **head, t_expand_arg **args)
 	if (!head || !args)
 		return (1);
 	i = 1;
-	if (!args[1]->value)
+	if (args[1] && !args[1]->value)
 		return (0);
 	if (count_args(args) > 1 && args[1]->value[0] == '-')
 		return (write(2, "rsh: unset: options are invalid\n", 32), 1);

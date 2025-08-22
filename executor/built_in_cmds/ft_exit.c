@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/22 03:13:23 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:46:48 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_exit(t_ast *ast, t_expand_arg **args)
 			|| !is_num_arg(args[1]->value)))
 	{
 		write(2, "rsh: exit: numeric argument required\n", 37);
-		(free_exec(ast->exec), free_ast(ast), exit(255));
+		(free_exec(ast->exec), free_ast(ast), exit(2));
 	}
 	if (argc > 2)
 		return (write(2, "rsh: exit: too many arguments\n", 30), 1);

@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 04:05:07 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/22 03:11:54 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:51:20 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,18 @@ static char	*replace_variable(char *result, char *dollar, t_exec *data)
 	return (new_result);
 }
 
+static char	*replace_exit_status(char *result, char *dollar, t_exec *data)
+{
+	char	*exit_status_str;
+	char	*new_result;
+
+	exit_status_str = ft_itoa(data->exit_value);
+	new_result = allocate_new_result(result, dollar, exit_status_str, 1);
+	free(exit_status_str);
+	free(result);
+	return (new_result);
+}
+
 char	*expand_variables_in_str(char *str, t_exec *data)
 {
 	char	*result;
@@ -74,13 +86,19 @@ char	*expand_variables_in_str(char *str, t_exec *data)
 	dollar = strchr(result, '$');
 	while (dollar != NULL)
 	{
+		if (*(dollar + 1) == '?')
+		{
+			result = replace_exit_status(result, dollar, data);
+			dollar = ft_strchr(result, '$');
+			continue ;
+		}
 		if (!ft_isalnum(*(dollar + 1)) && *(dollar + 1) != '_')
 		{
-			dollar = strchr(dollar + 1, '$');
+			dollar = ft_strchr(dollar + 1, '$');
 			continue ;
 		}
 		result = replace_variable(result, dollar, data);
-		dollar = strchr(result, '$');
+		dollar = ft_strchr(result, '$');
 	}
 	return (result);
 }
