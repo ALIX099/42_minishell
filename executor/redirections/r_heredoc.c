@@ -6,13 +6,11 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 23:15:56 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 18:03:35 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:35:45 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-static void	should_expand(t_redirect *r, t_exec *data);
 
 void	r_heredoc(t_redirect *r)
 {
@@ -27,30 +25,6 @@ void	r_heredoc(t_redirect *r)
 	close(pipefd[0]);
 }
 
-/*
- * Collect all heredocs before executing commands.
- * Replace heredoc redirection node with a pipe read-end.
- */
-
-static int	ft_do_while(char **line, char **content, t_redirect *r,
-		t_exec *data)
-{
-	char	*tmp;
-
-	*line = readline("> ");
-	if (!*line)
-		return (r->heredoc->raw_body = *content, should_expand(r, data), 2);
-	if (!ft_strcmp(*line, r->heredoc->delimeter))
-		return (free(*line), 1);
-	tmp = *content;
-	*content = ft_strjoin(*content, *line);
-	free(tmp);
-	tmp = *content;
-	*content = ft_strjoin(*content, "\n");
-	(free(tmp), free(*line));
-	return (0);
-}
-
 void	expand_heredoc(t_heredoc *heredoc, t_exec *data)
 {
 	char	*expanded;
@@ -60,39 +34,4 @@ void	expand_heredoc(t_heredoc *heredoc, t_exec *data)
 	expanded = expand_variables_in_str(heredoc->raw_body, data);
 	free(heredoc->raw_body);
 	heredoc->raw_body = expanded;
-}
-
-static void	should_expand(t_redirect *r, t_exec *data)
-{
-	if (r->type == REDIRECT_HEREDOC && !r->heredoc->quoted)
-		expand_heredoc(r->heredoc, data);
-}
-
-int	prepare_heredoc(t_redirect *r, t_exec *data)
-{
-	char	*line;
-	char	*content;
-	int		status;
-
-	(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_IGN));
-	while (r)
-	{
-		if (r->type == REDIRECT_HEREDOC)
-		{
-			content = ft_strdup("");
-			while (1)
-			{
-				status = ft_do_while(&line, &content, r, data);
-				if (status == 1)
-					break ;
-				if (status == 2)
-					return (free(content), 1);
-			}
-			free(r->heredoc->raw_body);
-			r->heredoc->raw_body = content;
-			should_expand(r, data);
-		}
-		r = r->next;
-	}
-	return (0);
 }

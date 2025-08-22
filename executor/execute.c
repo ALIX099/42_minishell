@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:53:34 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 22:19:30 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:06:46 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	execute_and_or(t_ast *ast)
 
 int	execute(t_ast *ast)
 {
-	// print_ast("root", ast, 0);
 	if (!ast)
 		return (0);
 	if (ast->type == NODE_CMD)
@@ -95,7 +94,7 @@ int	execute(t_ast *ast)
 		return (ast->exec->exit_value = execute_and_or(ast));
 	if (ast->type == NODE_SUBSHELL)
 		return (ast->exec->exit_value = execute_subshell(ast));
-	return (0); // Exit Status
+	return (0);
 }
 
 int	handle_child_status(pid_t pid)

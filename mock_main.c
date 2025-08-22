@@ -70,23 +70,23 @@ int	ft_readline(char **line, t_ast **cmds, t_exec *exec)
 	return (1);
 }
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
-    char *line;
-    t_ast *cmds;
-    t_exec exec;
+	char	*line;
+	t_ast	*cmds;
+	t_exec	exec;
 
-    (void)ac;
-    (void)av;
-    init_vars(&exec, envp);
-    while (ft_readline(&line, &cmds, &exec))
-    {
-        expand(cmds);
-        execute(cmds);
-        free(line);
-        free_ast(cmds);
-    }
-    free_exec(&exec);
-    rl_clear_history();
-    return (0);
+	(void)ac;
+	(void)av;
+	init_vars(&exec, envp);
+	while (ft_readline(&line, &cmds, &exec))
+	{
+		expand(cmds);
+		execute(cmds);
+		free(line);
+		free_ast(cmds);
+	}
+	free_exec(&exec);
+	rl_clear_history();
+	return (0);
 }

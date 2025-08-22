@@ -6,13 +6,13 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 00:08:23 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 22:34:53 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:31:45 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	r_out(t_redirect *r)
+void	r_out(t_redirect *r)
 {
 	int	fd;
 
@@ -30,7 +30,7 @@ static void	r_out(t_redirect *r)
 	close(fd);
 }
 
-static void	r_in(t_redirect *r)
+void	r_in(t_redirect *r)
 {
 	int	fd;
 
@@ -48,7 +48,7 @@ static void	r_in(t_redirect *r)
 	close(fd);
 }
 
-static void	r_append(t_redirect *r)
+void	r_append(t_redirect *r)
 {
 	int	fd;
 
@@ -66,34 +66,32 @@ static void	r_append(t_redirect *r)
 	close(fd);
 }
 
+void	apply_redirections(t_redirect *curr)
+{
+	while (curr)
+	{
+		if (curr->type == REDIRECT_OUT)
+			r_out(curr);
+		else if (curr->type == REDIRECT_APPEND)
+			r_append(curr);
+		else if (curr->type == REDIRECT_IN)
+			r_in(curr);
+		else if (curr->type == REDIRECT_HEREDOC)
+			r_heredoc(curr);
+		curr = curr->next;
+	}
+}
+
 int	ft_redirections(t_ast *ast, t_redirect *r)
 {
 	pid_t	pid;
-	int		exit_status;
 
+	if (prepare_heredoc(r, ast->exec))
+		return (1);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
 	if (pid == 0)
-	{
-		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
-		while (r)
-		{
-			if (r->type == REDIRECT_OUT)
-				r_out(r);
-			else if (r->type == REDIRECT_APPEND)
-				r_append(r);
-			else if (r->type == REDIRECT_IN)
-				r_in(r);
-			else if (r->type == REDIRECT_HEREDOC)
-				(prepare_heredoc(r, ast->exec), r_heredoc(r));
-			r = r->next;
-		}
-		exit_status = execute_command(ast);
-		free_exec(ast->exec);
-		free_ast(ast);
-		exit(exit_status);
-	}
-	else
-		return (handle_child_status(pid));
+		child_process(ast, r);
+	return (handle_child_status(pid));
 }

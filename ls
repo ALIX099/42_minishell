@@ -1,0 +1,12 @@
+cfg.md
+cleanup
+executor
+expander
+headers
+libft
+ls
+Makefile
+minishell
+mock_main.c
+parser
+readline.supp

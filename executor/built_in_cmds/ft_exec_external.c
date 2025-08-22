@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 11:53:00 by macbookpro        #+#    #+#             */
-/*   Updated: 2025/08/21 22:03:27 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:11:30 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,14 @@ static char	*find_path(t_ast *ast)
 	free(path_env);
 	if (!paths)
 		return (NULL);
-	i = 0;
-	while (paths[i])
+	i = -1;
+	while (paths[++i])
 	{
 		full_path = ft_strjoin(paths[i], "/");
 		full_path = ft_strjoin_free(full_path, ast->argv[0]->value);
 		if (access(full_path, X_OK) == 0)
 			return (free_array(paths), full_path);
 		free(full_path);
-		i++;
 	}
 	return (free_array(paths), NULL);
 }

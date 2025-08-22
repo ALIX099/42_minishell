@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/13 23:54:13 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 23:08:12 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:44:08 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,15 @@ void				command_not_found(char *s);
 void				update_env_value(t_env *env_list, const char *key,
 						const char *value);
 int					ft_redirections(t_ast *ast, t_redirect *r);
+void				r_out(t_redirect *r);
+void				r_in(t_redirect *r);
+void				r_append(t_redirect *r);
+int					handle_heredoc_parent(int pipe_fd[2], t_redirect *curr,
+						int status, t_exec *data);
+void				apply_redirections(t_redirect *curr);
+void				expand_heredoc(t_heredoc *heredoc, t_exec *data);
+void				handle_heredoc_child(int pipe_fd[2], t_heredoc *heredoc);
+void				child_process(t_ast *ast, t_redirect *r);
 void				r_heredoc(t_redirect *r);
 int					execute_command(t_ast *ast);
 int					ft_pipeline(t_ast *ast);
@@ -82,11 +91,12 @@ int					handle_child_status(pid_t pid);
 void				sig_handler(int signal);
 char				*expand_variables_in_str(char *str, t_exec *data);
 int					prepare_heredoc(t_redirect *r, t_exec *data);
-//Cleanup
-void	free_exec(t_exec *exec);
-void 				free_array(char **array);
-void 				free_argv(t_expand_arg **argv);
-void 				free_segments(t_segment *segments);
+// Cleanup
+void				free_exec(t_exec *exec);
+void				free_array(char **array);
+void				free_argv(t_expand_arg **argv);
+void				free_segments(t_segment *segments);
+void				free_redirects(t_redirect *redirects);
 void				free_ast(t_ast *ast);
 // To delete
 void				print_ast(const char *direction, t_ast *ast, int depth);

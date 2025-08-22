@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 05:50:06 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 23:53:45 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:13:23 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,43 +30,27 @@ static int	is_num_arg(char *str)
 
 int	ft_exit(t_ast *ast, t_expand_arg **args)
 {
-    int exit_code = 0; // Initialize with default value
-    int	argc;
+	int	argc;
+	int	exit_code;
 
-    argc = count_args(args);
-    if (!ast->exec->is_child)
-        write(1, "exit\n", 5);
-    
-    // Check if exec exists and has a valid exit_value
-    if (ast && ast->exec)
-        exit_code = ast->exec->exit_value;
-        
-    if (argc == 1)
-    {
-        // Use the saved exit_code
-        free_exec(ast->exec);
-        free_ast(ast);
-        exit(exit_code);
-    }
-    
-    // Check if args[1] exists and has value before dereferencing
-    if (argc > 1 && (!args[1] || !args[1]->value || !is_num_arg(args[1]->value)))
-    {
-        write(2, "rsh: exit: numeric argument required\n", 37);
-        free_exec(ast->exec);
-        free_ast(ast);
-        exit(255);
-    }
-    
-    if (argc > 2)
-    {
-        write(2, "rsh: exit: too many arguments\n", 30);
-        return (1);
-    }
-    
-    // Extract the numeric exit code before freeing
-    exit_code = (unsigned char)ft_atoi(args[1]->value);
-    free_exec(ast->exec);
-    free_ast(ast);
-    exit(exit_code);
+	exit_code = 0;
+	argc = count_args(args);
+	if (!ast->exec->is_child)
+		write(1, "exit\n", 5);
+	if (ast && ast->exec)
+		exit_code = ast->exec->exit_value;
+	if (argc == 1)
+		(free_exec(ast->exec), free_ast(ast), exit(exit_code));
+	if (argc > 1 && (!args[1] || !args[1]->value
+			|| !is_num_arg(args[1]->value)))
+	{
+		write(2, "rsh: exit: numeric argument required\n", 37);
+		(free_exec(ast->exec), free_ast(ast), exit(255));
+	}
+	if (argc > 2)
+		return (write(2, "rsh: exit: too many arguments\n", 30), 1);
+	exit_code = (unsigned char)ft_atoi(args[1]->value);
+	free_exec(ast->exec);
+	free_ast(ast);
+	exit(exit_code);
 }

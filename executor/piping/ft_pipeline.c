@@ -6,52 +6,52 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 00:50:52 by abouknan          #+#    #+#             */
-/*   Updated: 2025/08/21 21:48:52 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 01:45:26 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_ast(t_ast *ast);
+void		free_ast(t_ast *ast);
 
-static void ft_single_left(t_ast *left, int fds[2])
+static void	ft_single_left(t_ast *left, int fds[2])
 {
-    int exit_status;
+	int	exit_status;
 
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    close(fds[0]);
-    if (dup2(fds[1], STDOUT_FILENO) < 0)
-    {
-        perror("dup2");
-        exit(1);
-    }
-    left->exec->is_child = 1;
-    exit_status = execute(left);
-    close(fds[1]);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	close(fds[0]);
+	if (dup2(fds[1], STDOUT_FILENO) < 0)
+	{
+		perror("dup2");
+		exit(1);
+	}
+	left->exec->is_child = 1;
+	exit_status = execute(left);
+	close(fds[1]);
 	free_exec(left->exec);
 	free_ast(left);
-    exit(exit_status);
+	exit(exit_status);
 }
 
-static void ft_single_right(t_ast *right, int fds[2])
+static void	ft_single_right(t_ast *right, int fds[2])
 {
-    int exit_status;
+	int	exit_status;
 
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    close(fds[1]);
-    if (dup2(fds[0], STDIN_FILENO) < 0)
-    {
-        perror("dup2");
-        exit(1);
-    }
-    right->exec->is_child = 1;
-    exit_status = execute(right);
-    close(fds[0]);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	close(fds[1]);
+	if (dup2(fds[0], STDIN_FILENO) < 0)
+	{
+		perror("dup2");
+		exit(1);
+	}
+	right->exec->is_child = 1;
+	exit_status = execute(right);
+	close(fds[0]);
 	free_exec(right->exec);
-    free_ast(right);
-    exit(exit_status);
+	free_ast(right);
+	exit(exit_status);
 }
 
 int	ft_pipeline(t_ast *ast)

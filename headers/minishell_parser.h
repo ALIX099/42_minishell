@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:15:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 23:08:17 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:44:22 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stddef.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/stat.h>
@@ -151,8 +151,10 @@ typedef struct s_ast
 int						process_quoted_segment(t_token *token, char *s, int i,
 							char quote);
 t_segment				*deep_copy_segments(t_segment *source);
-void					process_command_tokens(t_ast *node, t_token **tokens, size_t *argc);
-void					process_word_token(t_ast *node, t_token **tokens, size_t *argc);
+void					process_command_tokens(t_ast *node, t_token **tokens,
+							size_t *argc);
+void					process_word_token(t_ast *node, t_token **tokens,
+							size_t *argc);
 int						is_valid_command_token(t_token_type type);
 t_ast					*syntactic_analysis(t_token *tokens);
 t_ast					*parse(char *line);
@@ -176,8 +178,10 @@ t_redirect				*setup_redirection(t_token **tokens,
 int						ft_isspace(char c);
 int						ft_strcmp(const char *s1, const char *s2);
 char					*ft_strndup(char *s, int n);
+void					onto_next_token(t_token **tokens);
 // Cleanup
 void					free_ast(t_ast *ast);
+void					free_segments(t_segment *segments);
 void					free_token(t_token *token);
-void 					free_token_list(t_token *tokens);
+void					free_token_list(t_token *tokens);
 #endif // MINISHELL_PARSER_H

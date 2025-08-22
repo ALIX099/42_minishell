@@ -6,7 +6,7 @@
 /*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:36:27 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 21:34:32 by abouknan         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:30:05 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,20 @@ t_ast	*parse_pipeline(t_token **tokens)
 	t_ast	*left;
 	t_ast	*right;
 	t_ast	*parent;
-	t_token	*old;
 
 	left = parse_command(tokens);
 	while (*tokens && (*tokens)->type == IS_PIPE)
 	{
-		old = *tokens;
-		*tokens = (*tokens)->next;
-		free_token(old);
+		onto_next_token(tokens);
 		right = parse_command(tokens);
 		if (!right)
 			return (syntax_error("expected command after operator", *tokens),
 				NULL);
 		parent = malloc(sizeof(t_ast));
 		parent->type = NODE_PIPE;
+		parent->left = left;
 		parent->right = right;
 		parent->argv = NULL;
-		parent->left = left;
 		parent->redirects = NULL;
 		left = parent;
 	}
@@ -76,26 +73,21 @@ t_ast	*parse_pipeline(t_token **tokens)
 t_ast	*parse_logical_expr(t_token **tokens)
 {
 	t_ast		*left;
-	t_ast_type	type;
 	t_ast		*right;
 	t_ast		*parent;
-	t_token		*old;
 
 	left = parse_pipeline(tokens);
 	while (*tokens && ((*tokens)->type == IS_AND || (*tokens)->type == IS_OR))
 	{
+		parent = malloc(sizeof(t_ast));
 		if ((*tokens)->type == IS_AND)
-			type = NODE_AND;
+			parent->type = NODE_AND;
 		else
-			type = NODE_OR;
-		old = *tokens;
-		*tokens = (*tokens)->next;
-		free_token(old);
+			parent->type = NODE_OR;
+		onto_next_token(tokens);
 		right = parse_pipeline(tokens);
 		if (!right)
-			return (syntax_error("no command after logical op",*tokens), NULL);
-		parent = malloc(sizeof(t_ast));
-		parent->type = type;
+			return (syntax_error("no command after logical op", *tokens), NULL);
 		parent->left = left;
 		parent->right = right;
 		parent->argv = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcard.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ikarouat <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abouknan <abouknan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 04:06:44 by ikarouat          #+#    #+#             */
-/*   Updated: 2025/08/21 15:07:16 by ikarouat         ###   ########.fr       */
+/*   Updated: 2025/08/22 03:24:19 by abouknan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ char	*expand_wildcard(char *str)
 		return (ft_strdup(str));
 	result = ft_strdup("");
 	matches = 0;
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry != NULL)
 	{
-		if (entry->d_name[0] == '.')
-			continue ;
-		if (match_pattern(str, entry->d_name))
+		if (entry->d_name[0] != '.' && match_pattern(str, entry->d_name))
 			add_match(&result, entry->d_name, &matches);
+		entry = readdir(dir);
 	}
 	closedir(dir);
 	if (matches == 0)
