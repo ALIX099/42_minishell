@@ -1,7 +1,7 @@
 # 42 MiniShell 💻⚡
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/77735052/144885310-c6c456ce-f117-4339-ac98-6e9ec75968c0.png" alt="MiniShell Banner" width="60%">
+  <img src="https://user-images.githubusercontent.com/77735052/144885310-c6c456ce-f117-4339-ac98-6e9ec75968c0.png" alt="MiniShell Banner" width="40%">
 </p>
 
 ---
