@@ -37,9 +37,3 @@ The project demonstrates **low-level system programming**, **process control**, 
 - Implementing pipes and redirections  
 - Handling multiple processes safely  
 - Writing modular, maintainable C code  
-
----
-
-### 🔗 Links
-- [GitHub Repository](https://github.com/abouknan/42_minishell)  
-- ![42 Badge](https://badge.mediaplus.ma/star/abouknan)
